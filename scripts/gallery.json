@@ -1,0 +1,65 @@
+[
+  {
+    "src": "assets/gallery/worship-hall.jpg",
+    "alt": "The church congregation worshipping with the choir at the front of the hall",
+    "caption": "Worship together",
+    "width": 1536,
+    "height": 1024,
+    "sourceFile": "08-IMG-20261014-WA0103.jpg",
+    "sha256": "fe62bb90de20f9220193d756e9d543fe39d2cb8079b8d6dec4305500dd8a4f8e"
+  },
+  {
+    "src": "assets/gallery/congregation-praise.jpg",
+    "alt": "Members of the congregation worshipping with hands raised",
+    "caption": "A moment of praise",
+    "width": 1536,
+    "height": 1024,
+    "sourceFile": "02-IMG-20261014-WA0112.jpg",
+    "sha256": "72d3536bb033d00ea8bd34c585f595ef4d18da730449530129e4f5c80014d5da"
+  },
+  {
+    "src": "assets/gallery/choir-singer.jpg",
+    "alt": "A choir singer holding a microphone and raising his hand during worship",
+    "caption": "Voices of worship",
+    "width": 1024,
+    "height": 1536,
+    "sourceFile": "04-IMG-20261014-WA0115.jpg",
+    "sha256": "fdb1f2fa508f6ddf2a418188a068bd48bf8d5537e9b295ac998b421c8e98f1fa"
+  },
+  {
+    "src": "assets/gallery/choir-monochrome.jpg",
+    "alt": "Black and white photograph of the church choir singing before the congregation",
+    "caption": "Our church choir",
+    "width": 1536,
+    "height": 1024,
+    "sourceFile": "06-IMG-20261014-WA0107.jpg",
+    "sha256": "289574b904f157842385e88ee8dac82fcfd774cddef71f3053607e19fbbe1028"
+  },
+  {
+    "src": "assets/gallery/congregation-worship.jpg",
+    "alt": "The congregation singing and worshipping together",
+    "caption": "Gathered in faith",
+    "width": 1536,
+    "height": 1024,
+    "sourceFile": "09-IMG-20261014-WA0102.jpg",
+    "sha256": "b81f7dbe486f4c0bdac731eacc0fac42e459184feee76f3f98b3ce9faa9c4ac6"
+  },
+  {
+    "src": "assets/gallery/choir-gathering.jpg",
+    "alt": "The choir leading worship in front of the church congregation",
+    "caption": "Worship and fellowship",
+    "width": 1536,
+    "height": 1024,
+    "sourceFile": "05-IMG-20261014-WA0108.jpg",
+    "sha256": "868f65a47802e89972d9e075937818901fafbafb1c982278048cbc272cb7ccad"
+  },
+  {
+    "src": "assets/gallery/congregation-seated.jpg",
+    "alt": "The congregation seated together during a church gathering",
+    "caption": "Life in our church",
+    "width": 1536,
+    "height": 1024,
+    "sourceFile": "10-IMG-20261014-WA0100.jpg",
+    "sha256": "d496a67174a5cfba49deb70e1cffa657433a3c263966bc7c73a069cf4a76d70d"
+  }
+]
