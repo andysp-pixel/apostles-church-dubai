@@ -28,7 +28,20 @@ for(const [source,photo] of Object.entries(manifest.images)){
  for(const item of photo.variants){assert.ok(item.width<=photo.width);assert.equal(fs.statSync(path.join(dist,item.src)).size,item.bytes);assert.ok(Math.abs(item.height/item.width-photo.height/photo.width)<0.004,'Image proportions changed');}
 }
 for(const file of fs.readdirSync(dist).filter(n=>n.endsWith('.html'))){
- const html=read(file);assert.ok(html.includes('viewport-fit=cover'));assert.ok(html.includes('src="mobile.js?v=20261015-2"'));assert.ok(html.includes('href="mobile.css?v=20261015-2"'));
+ const html=read(file);assert.ok(html.includes('viewport-fit=cover'));assert.ok(html.includes('src="mobile.js?v=20261015-3"'));assert.ok(html.includes('href="mobile.css?v=20261015-3"'));
+ const header=html.match(/<header\b[\s\S]*?<\/header>/)[0];
+ const desktop=header.match(/<nav[^>]*>([\s\S]*?)<div class="mobile-nav-panel">/)[1];
+ const phone=header.match(/<div class="mobile-menu-links">([\s\S]*?)<\/div>/)[1];
+ const links=text=>[...text.matchAll(/<a\b[^>]*href="([^"]+)"[^>]*>([^<]+)<\/a>/g)].map(m=>[m[1],m[2].trim()]);
+ assert.deepEqual(links(phone),links(desktop),'Phone and desktop must have identical page links/labels');
+ assert.ok(header.includes('class="button mobile-nav-visit" href="visit.html"'),'Visit Us exists in both headers');
+ assert.ok(!/Our church\s*<br>in pictures\.|Follow us on Instagram|>Our vision<\/a>/.test(html),'Marked labels should be removed on every viewport');
+ if(['index.html','about.html'].includes(file)){
+  const vision=html.match(/<section class="church-vision[\s\S]*?<\/section>/)[0];
+  assert.ok(!/Amplified Bible|Read the passage|Copyright|Isaiah 40:3|Malachi 4:5/.test(vision),'Vision card contains only the supplied passage and its reference');
+  assert.ok(vision.includes('Turn back the hearts of the fathers to the children'));
+ }
+ if(file==='live.html')assert.ok(html.includes('class="button facebook-live"')&&html.includes('>Watch on Facebook'));
  for(const set of html.matchAll(/srcset="([^"]+)"/g))for(const item of set[1].split(','))assert.ok(fs.existsSync(path.join(dist,item.trim().split(' ')[0])),'Missing responsive photo');
 }
 class El{

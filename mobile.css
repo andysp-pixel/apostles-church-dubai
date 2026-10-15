@@ -1,4 +1,4 @@
-/* Mobile presentation is isolated here. Existing desktop stylesheet is unchanged. */
+/* Mobile presentation plus narrowly scoped shared corrections requested by the owner. The original desktop stylesheet is unchanged. */
 .mobile-only,.mobile-copy,.mobile-nav-panel{display:none}
 .responsive-photo{display:contents}
 @media (max-width:767px){
@@ -120,4 +120,46 @@
 }
 @media (max-width:767px) and (prefers-reduced-motion:reduce){
  *,*::before,*::after{scroll-behavior:auto!important;animation:none!important;transition:none!important}.motion-ready [data-reveal]{opacity:1!important;transform:none!important}
+}
+
+/* Requested shared corrections: the same components on computer and phone. */
+.about-editorial-copy h1{max-inline-size:100%;text-align:start;text-wrap:balance}
+.about-editorial-copy>p,.welcome-copy>p,.church-purpose p{max-inline-size:100%;text-align:start;overflow-wrap:break-word}
+.about-editorial-copy .actions{align-items:stretch}
+.church-gallery .section-heading{margin-block-end:24px;gap:0}
+.church-gallery .section-heading .eyebrow{margin:0}
+.church-purpose{padding-block-end:40px}
+.church-gallery{padding-block-start:40px}
+.service-grid{gap:16px;border:0}
+.service-card,.service-card+.service-card{margin:0;padding:24px;border:1px solid #454e41;border-radius:14px}
+.service-clock{font-variant-numeric:tabular-nums}
+.online-side #watch-live,.online-side .facebook-live{display:flex;align-items:center;justify-content:center;inline-size:100%;max-inline-size:100%;min-block-size:50px;margin:0 0 12px;padding:15px 22px;text-align:center;text-decoration:none}
+.online-side .facebook-live:hover{background:#ffad75}
+@media (max-width:767px){
+ .service-card,.service-card+.service-card{padding:18px 16px 10px;border:1px solid var(--mobile-line);border-radius:16px}
+ .service-grid{gap:14px}
+ .service-section .service-heading .eyebrow{color:var(--orange)}
+ .service-section .service-heading>p,.service-section .next-service p{color:var(--mobile-muted)}
+ .service-card .service-clock>span{margin-inline:4px}
+ .church-gallery .gallery-slide img,.church-gallery .gallery-slide:first-child img{width:100%;height:auto;block-size:auto;aspect-ratio:4/3;object-fit:cover!important;object-position:center!important;border-radius:16px}
+ .church-gallery .gallery-slide figcaption{margin:0;padding:12px 14px}
+ .about-editorial-copy h1{font-size:36px!important;line-height:1.17!important;letter-spacing:-1px!important}
+ .about-editorial-copy .about-editorial-lead{margin-block:0 16px!important;font-size:18px!important;line-height:1.5!important}
+ .about-editorial-copy .actions{margin-block-start:24px}
+ .church-purpose{padding-block-end:24px}
+ .church-gallery{padding-block:32px 48px}
+ .church-gallery .section-heading{margin-block-end:20px}
+ .online-side #watch-live,.online-side .facebook-live{min-block-size:54px;padding:14px 18px;border-radius:14px;background:var(--orange);color:#fff;font-size:16px;font-weight:600;line-height:1.4}
+ .online-side .facebook-live:hover{background:#933910}
+}
+@media (min-width:768px) and (max-width:1050px){
+ .header #navigation>a{display:none}
+ .header #navigation .mobile-nav-panel{display:flex;flex-direction:column;inline-size:100%}
+ .header #navigation{max-block-size:calc(100vh - 85px);overflow-y:auto}
+ .header #navigation .mobile-menu-links{display:grid;gap:0}
+ .header #navigation .mobile-menu-link{display:flex;align-items:center;min-block-size:44px;padding:10px 0;border-block-end:1px solid var(--line);font-size:16px}
+ .header #navigation .mobile-nav-visit{display:flex;justify-content:center;min-block-size:50px;margin-block-start:18px}
+ .header #navigation a[aria-current=page]::after{content:none;display:none}
+ .mobile-menu-label{margin:0 0 12px;color:var(--orange);font-size:13px;letter-spacing:1px}
+ .mobile-menu-note{margin:16px 0 0;font-size:13px;color:var(--muted)}
 }

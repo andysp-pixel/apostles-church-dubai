@@ -23,13 +23,13 @@ def logo():
 
 def header(current):
     return f'''<div class="topline"><span>Christ’s ambassadors. A church for the nations.</span><a href="visit.html">Sunday &amp; Thursday · 8 PM <span aria-hidden="true">↗</span></a></div>
-    <header class="header"><div class="header-brand">{logo()}</div><button class="menu-toggle" aria-controls="navigation" aria-expanded="false" aria-label="Open menu"><span></span><span></span></button><nav id="navigation" aria-label="Main navigation">{nav(current, False)}{mobile.navigation(current)}</nav><a class="header-visit" href="visit.html"{(' aria-current="page"' if current == 'Visit Us' else '')}><span class="pin-icon" aria-hidden="true">⌖</span> Visit us <span aria-hidden="true">↗</span></a></header>'''
+    <header class="header"><div class="header-brand">{logo()}</div><button class="menu-toggle" aria-controls="navigation" aria-expanded="false" aria-label="Open menu"><span></span><span></span></button><nav id="navigation" aria-label="Main navigation">{nav(current, False)}{mobile.navigation(current, PAGES)}</nav><a class="header-visit" href="visit.html"{(' aria-current="page"' if current == 'Visit Us' else '')}><span class="pin-icon" aria-hidden="true">⌖</span> Visit Us <span aria-hidden="true">↗</span></a></header>'''
 
 def footer():
-    return f'''<footer class="footer-new"><div class="wrap"><div class="footer-grid"><div class="footer-brand">{logo()}<p>Preparing a people<br>for the Lord.</p><a class="footer-scripture" href="about.html#our-vision">Our Vision · Luke 1:17</a><div class="footer-flags" aria-label="United Arab Emirates and Burundi"><img src="assets/flag-uae.svg" width="25" height="15" alt="United Arab Emirates flag" title="United Arab Emirates"><img src="assets/flag-burundi.svg" width="25" height="15" alt="Burundi flag" title="Burundi"></div></div><div class="footer-column"><h2>Visit our church</h2><address><strong>Hall 601 · 6th Floor</strong><br>Bank Melliran Building<br>Al Mankhool, Bur Dubai<br>Dubai, United Arab Emirates</address><a class="footer-map" href="{MAP}" target="_blank" rel="noopener noreferrer">Near Sharaf DG Metro<br>Get directions</a></div><div class="footer-column"><h2>Explore</h2>{nav(None)}</div><div class="footer-column"><h2>Contact</h2><a href="{FB}" target="_blank" rel="noopener noreferrer">Message the church</a><a href="prayer.html">Prayer requests</a><a href="visit.html">Plan your visit</a><a class="configured-email" hidden></a><a class="configured-phone" href="tel:+971524373611">+971 52 437 3611</a><p>Reach us through our<br>official Facebook page.</p></div><div class="footer-column"><h2>Stay connected</h2><a class="social-pill" href="{YT}" target="_blank" rel="noopener noreferrer">YouTube</a><a class="social-pill" href="{FB}" target="_blank" rel="noopener noreferrer">Facebook</a><a class="social-pill" href="{IG}" target="_blank" rel="noopener noreferrer">Instagram</a></div></div>{mobile.compact_footer()}<div class="footer-bottom"><span>© <span id="year">2026</span> Apostles Church of Christ Dubai</span><span>Faith. Fellowship. Hope.</span><button class="subtle-link" id="privacy-open">Privacy</button><a href="#top">Back to top</a></div></div></footer>'''
+    return f'''<footer class="footer-new"><div class="wrap"><div class="footer-grid"><div class="footer-brand">{logo()}<p>Preparing a people<br>for the Lord.</p><a class="footer-scripture" href="about.html#our-vision">Our Vision · Luke 1:17</a><div class="footer-flags" aria-label="United Arab Emirates and Burundi"><img src="assets/flag-uae.svg" width="25" height="15" alt="United Arab Emirates flag" title="United Arab Emirates"><img src="assets/flag-burundi.svg" width="25" height="15" alt="Burundi flag" title="Burundi"></div></div><div class="footer-column"><h2>Visit our church</h2><address><strong>Hall 601 · 6th Floor</strong><br>Bank Melliran Building<br>Al Mankhool, Bur Dubai<br>Dubai, United Arab Emirates</address><a class="footer-map" href="{MAP}" target="_blank" rel="noopener noreferrer">Near Sharaf DG Metro<br>Get directions</a></div><div class="footer-column"><h2>Explore</h2>{nav(None)}</div><div class="footer-column"><h2>Contact</h2><a href="{FB}" target="_blank" rel="noopener noreferrer">Message the church</a><a href="prayer.html">Prayer requests</a><a href="visit.html">Plan your visit</a><a class="configured-email" hidden></a><a class="configured-phone" href="tel:+971524373611">+971 52 437 3611</a><p>Reach us through our<br>official Facebook page.</p></div><div class="footer-column"><h2>Stay connected</h2><a class="social-pill" href="{YT}" target="_blank" rel="noopener noreferrer">YouTube</a><a class="social-pill" href="{FB}" target="_blank" rel="noopener noreferrer">Facebook</a><a class="social-pill" href="{IG}" target="_blank" rel="noopener noreferrer">Instagram</a></div></div>{mobile.compact_footer(PAGES)}<div class="footer-bottom"><span>© <span id="year">2026</span> Apostles Church of Christ Dubai</span><span>Faith. Fellowship. Hope.</span><button class="subtle-link" id="privacy-open">Privacy</button><a href="#top">Back to top</a></div></div></footer>'''
 
-def dialogs(include_bible=False):
-    credits=modern.verse_credits() if include_bible else ""
+def dialogs(include_bible=False, include_vision=False):
+    credits=(modern.verse_credits() if include_bible else "") + (about.vision_credits() if include_vision else "")
     return f'''<div class="toast" id="toast" role="status" aria-live="polite"></div><dialog id="video-dialog" class="video-dialog" aria-labelledby="video-dialog-title"><div class="dialog-bar"><h2 id="video-dialog-title">Worship Vibe</h2><button class="close-dialog" aria-label="Close video">✕</button></div><div id="dialog-player"></div><p>Having trouble playing? <a href="https://www.youtube.com/watch?v=G9IpNCJlAVc" target="_blank" rel="noopener noreferrer">Watch on YouTube ↗</a></p></dialog><dialog id="privacy-dialog" class="privacy-dialog" aria-labelledby="privacy-title"><div class="dialog-bar"><h2 id="privacy-title">Your privacy</h2><button class="close-dialog" aria-label="Close privacy notice">✕</button></div><p>This website does not use analytics, advertising cookies or accounts. Prayer drafts stay in this page’s memory and are cleared when you leave or reload. They are not sent or stored by this website. A temporary browser-tab flag remembers that you have seen the welcome animation; it contains no personal information.</p><p>A prayer request is shared only when you copy it and choose to send it yourself through the church’s Facebook page. The daily NIV verse connects to Bible Gateway automatically. Any configured donation checkout belongs to its external provider; this website does not process payments.</p><p>YouTube connects only after you choose to play a YouTube video or open a YouTube link. YouTube, Facebook and payment providers use their own privacy policies. The church introduction, images and fonts are hosted with this website.</p>{credits}</dialog>'''
 
 def welcome_intro():
@@ -37,7 +37,7 @@ def welcome_intro():
 
 def page(current, title, description, body):
     html = f'''<!doctype html>
-<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>{title} — Apostles Church of Christ Dubai</title><meta name="description" content="{description}"><meta name="theme-color" content="#f9f7f2"><meta property="og:title" content="{title} — Apostles Church of Christ Dubai"><meta property="og:description" content="{description}"><meta property="og:type" content="website"><link rel="icon" href="assets/logo.png"><link rel="stylesheet" href="assets/fonts.css"><link rel="stylesheet" href="styles.css"><link rel="stylesheet" href="mobile.css?v=20261015-2"><script src="config.js" defer></script>{('<script src="assets/hls.min.js" defer></script>' if current == 'Live' else '')}<script src="welcome.js" defer></script><script src="live-status.js" defer></script><script src="app.js" defer></script><script src="schedule.js" defer></script><script src="church.js?v=20261015-2" defer></script><script src="gallery.js" defer></script><script src="mobile.js?v=20261015-2" defer></script></head><body id="top" data-page="{current.lower().replace(' ', '-')}">{welcome_intro()}<a class="skip-link" href="#main">Skip to content</a>{header(current)}<main id="main">{body}</main>{footer()}{dialogs(current in ["Our Church", "Prayer"])}<noscript><div class="noscript">The video controls and prayer draft need JavaScript. You can still read our church information and visit <a href="{YT}">YouTube</a> or <a href="{FB}">Facebook</a>.</div></noscript></body></html>'''
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>{title} — Apostles Church of Christ Dubai</title><meta name="description" content="{description}"><meta name="theme-color" content="#f9f7f2"><meta property="og:title" content="{title} — Apostles Church of Christ Dubai"><meta property="og:description" content="{description}"><meta property="og:type" content="website"><link rel="icon" href="assets/logo.png"><link rel="stylesheet" href="assets/fonts.css"><link rel="stylesheet" href="styles.css"><link rel="stylesheet" href="mobile.css?v=20261015-3"><script src="config.js" defer></script>{('<script src="assets/hls.min.js" defer></script>' if current == 'Live' else '')}<script src="welcome.js" defer></script><script src="live-status.js" defer></script><script src="app.js" defer></script><script src="schedule.js" defer></script><script src="church.js?v=20261015-3" defer></script><script src="gallery.js" defer></script><script src="mobile.js?v=20261015-3" defer></script></head><body id="top" data-page="{current.lower().replace(' ', '-')}">{welcome_intro()}<a class="skip-link" href="#main">Skip to content</a>{header(current)}<main id="main">{body}</main>{footer()}{dialogs(current in ["Our Church", "Prayer"], current in ["Our Church", "About"])}<noscript><div class="noscript">The video controls and prayer draft need JavaScript. You can still read our church information and visit <a href="{YT}">YouTube</a> or <a href="{FB}">Facebook</a>.</div></noscript></body></html>'''
     html = mobile.decorate(html)
     output = next(url for name,url in PAGES if name == current)
     # Plain link labels and authentic church branding: no decorative arrows or stars.
@@ -63,7 +63,7 @@ original_vision = about.vision_section
 
 def responsive_vision():
     html = original_vision()
-    detail = '<details class="mobile-only mobile-vision-details"><summary>Our Vision · Luke 1:17</summary><blockquote>' + escape(about.VISION_TEXT) + '</blockquote><p>' + about.VISION_REFERENCE + '</p><a class="text-link" href="about.html#our-vision">Read our vision</a></details>'
+    detail = '<details class="mobile-only mobile-vision-details"><summary>Our Vision · Luke 1:17</summary><blockquote>' + escape(about.VISION_TEXT) + '</blockquote></details>'
     # Details summary only supplements Home; other pages show the complete scripture.
     return html.replace('</section>', detail + '</section>')
 
@@ -82,4 +82,31 @@ page('Donate', 'Giving', 'Find bank transfer, PayPal, BOTIM Pay and Western Unio
 page('About', 'About Us', 'Meet Apostles Church of Christ Dubai. Our values, mission and vision from Luke 1:17: preparing a people for the Lord.', about.about_page(gallery) + identity())
 page('Sermons', 'Sermons and Recordings', 'Explore worship and recent sermon recordings from Apostles Church of Christ Dubai.', page_intro('WORSHIP &amp; THE WORD', 'A word for<br><em>your week.</em>', 'Explore the messages and worship recordings shared by our church.') + modern.sermons_body())
 page('Visit Us', 'Plan Your Visit', 'Join Apostles Church of Christ Dubai on Sunday and Thursday, 8–11 PM, and Saturday, 3–6 AM. All times are Dubai time.', page_intro('YOU ARE WELCOME HERE', 'Your next step<br><em>could be here.</em>', 'Come as you are. We’d love to welcome you into our community.') + modern.schedule_section() + C['visit'])
-print('Generated 7 HTML5 pages with current service times and daily NIV verse support.')
+from html.parser import HTMLParser
+
+class MarkupAudit(HTMLParser):
+    """Reject broken nesting and stray text around page sections/dialogs."""
+    void = {'area','base','br','col','embed','hr','img','input','link','meta','param','source','track','wbr'}
+    blocks = {'article','aside','blockquote','div','footer','form','h1','h2','h3','header','main','nav','ol','p','section','ul'}
+    def __init__(self):
+        super().__init__(convert_charrefs=True)
+        self.stack=[]
+    def handle_starttag(self, tag, attrs):
+        names=[key for key,_ in attrs]
+        assert len(names)==len(set(names)), f'Duplicate attribute on {tag}'
+        assert not (self.stack and self.stack[-1]=='p' and tag in self.blocks), f'Block {tag} nested inside a paragraph'
+        if tag not in self.void:self.stack.append(tag)
+    def handle_endtag(self, tag):
+        if tag in self.void:return
+        assert self.stack and self.stack[-1]==tag, f'Unbalanced closing {tag}; context {self.stack[-4:]}'
+        self.stack.pop()
+    def handle_data(self, text):
+        if self.stack and self.stack[-1] in {'body','main','dialog'}:
+            assert not text.strip(), f'Stray page text: {text[:60]!r}'
+
+for _, filename in PAGES:
+    audit=MarkupAudit()
+    audit.feed((DIST/filename).read_text())
+    audit.close()
+    assert not audit.stack, f'Unclosed elements in {filename}: {audit.stack}'
+print('Generated and structurally verified 7 HTML5 pages with current service times and daily NIV verse support.')

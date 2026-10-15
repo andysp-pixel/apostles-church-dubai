@@ -28,12 +28,12 @@ for(const [file,html] of contents){
  assert((desktopHeader.match(/aria-current="page"/g)||[]).length===1,'Missing desktop active page in '+file);
  const mobileNav=header.match(/<div class="mobile-nav-panel">[\s\S]*?<\/nav>/)?.[0];
  const mobileCurrent=(mobileNav?.match(/aria-current="page"/g)||[]).length;
- assert(mobileNav&&mobileCurrent===(['prayer.html','donate.html'].includes(file)?0:1),'Invalid mobile active page in '+file);
+ assert(mobileNav&&mobileCurrent===1,'Invalid mobile active page in '+file);
  assert(header.includes('href="visit.html"'),'Visit button missing');
  assert(html.includes('<address>'),'Missing footer address in '+file);
  const count=(html.match(/Bank Melliran Building/g)||[]).length;assert(count===(file==='visit.html'?2:1),'Repeated address in '+file);
  assert(nav.split('<div class="mobile-nav-panel">')[0].includes('>Our Church</a>'),'Desktop Home label must be Our Church');
- assert(nav.includes('>Home</a>'),'Mobile Home link missing');
+ assert(nav.includes('>Our Church</a>'),'Mobile Our Church link missing');
  assert(html.includes('id="welcome-intro"')&&html.includes('id="welcome-skip"'),'Welcome controls missing');
  assert(html.includes('Welcome to<br><em>Our Church</em>'),'Welcome wording mismatch');
  assert(html.includes('footer-column'),'Missing detailed footer in '+file);

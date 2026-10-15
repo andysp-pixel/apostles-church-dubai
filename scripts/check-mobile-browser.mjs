@@ -39,7 +39,7 @@ try{
       await page.locator('.menu-toggle').tap();assert.equal(await page.locator('.menu-toggle').getAttribute('aria-expanded'),'true');await noOverflow(page,'open menu');
       const menuBox=await page.locator('#navigation').boundingBox();assert.ok(menuBox.height>=page.viewportSize().height-header.height-2,'Menu must extend below the header to the bottom of the viewport');
       assert.equal(await page.locator('.header').evaluate(el=>getComputedStyle(el).backdropFilter),'none','Header blur must not trap the fixed menu');
-      assert.equal(await page.locator('.mobile-menu-link').count(),10);
+      assert.equal(await page.locator('.mobile-menu-link').count(),6);
       await page.locator('.mobile-menu-link').first().scrollIntoViewIfNeeded();const firstMenuItem=await page.locator('.mobile-menu-link').first().boundingBox();assert.ok(firstMenuItem.y>=menuBox.y&&firstMenuItem.y+firstMenuItem.height<=menuBox.y+menuBox.height+1,'First menu link is visible');
       await page.locator('.mobile-menu-link').last().scrollIntoViewIfNeeded();const lastMenuItem=await page.locator('.mobile-menu-link').last().boundingBox();assert.ok(lastMenuItem.y>=menuBox.y&&lastMenuItem.y+lastMenuItem.height<=menuBox.y+menuBox.height+1,'Last menu link is reachable');
       await page.keyboard.press('Escape');assert.equal(await page.locator('.menu-toggle').getAttribute('aria-expanded'),'false');
@@ -54,6 +54,13 @@ try{
        await page.screenshot({path:path.join(output,engine+'-'+width+'-home.png'),fullPage:true});
       }
       if(file==='live.html'){const box=await page.locator('.player-area').boundingBox();assert.ok(Math.abs(box.width/box.height-16/9)<0.02,'16:9 player');assert.ok(box.x>=0&&box.x+box.width<=width+1);}
+      if(['index.html','visit.html'].includes(file)){
+       const cards=await page.locator('.service-card').evaluateAll(items=>items.map(el=>{const box=el.getBoundingClientRect(),icon=el.querySelector('.service-mobile-icon').getBoundingClientRect(),title=el.querySelector('h3').getBoundingClientRect(),clock=el.querySelector('.service-clock').getBoundingClientRect(),button=el.querySelector('.calendar-link').getBoundingClientRect();return{x:box.x,right:box.right,icon:icon.x,title:title.x,clock:clock.x,button:button.x};}));
+       for(const card of cards){for(const key of ['x','right','icon','title','clock','button'])assert.ok(Math.abs(card[key]-cards[0][key])<=1,'Service cards must share the same '+key+' alignment');}
+      }
+      if(file==='live.html'){
+       const youtube=await page.locator('#watch-live').boundingBox(),facebook=await page.locator('.facebook-live').boundingBox();assert.ok(Math.abs(youtube.x-facebook.x)<=1&&Math.abs(youtube.width-facebook.width)<=1&&Math.abs(youtube.height-facebook.height)<=1,'Facebook and YouTube actions match');
+      }
       if(file==='prayer.html')assert.ok(await page.locator('#prayer-message').evaluate(el=>parseFloat(getComputedStyle(el).fontSize)>=16));
       report.push({engine,width,page:file,result:'passed'});
      }

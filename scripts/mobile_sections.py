@@ -16,14 +16,15 @@ PATHS={
 }
 def icon(name):
  return '<svg class="mobile-icon" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="'+PATHS[name]+'"/></svg>'
-def navigation(current):
- links=[('Home','index.html','Our Church'),('About Us','about.html','About'),('Our Beliefs','about.html#our-values',''),('Services','index.html#service-times',''),('Sermons','sermons.html','Sermons'),('Events','index.html#events',''),('Gallery','index.html#church-gallery',''),('Live Stream','live.html','Live'),('Get Involved','index.html#get-involved',''),('Contact','index.html#contact','')]
- items=''.join('<a class="mobile-menu-link'+(' is-current' if active==current else '')+'" href="'+url+'"'+(' aria-current="page"' if active==current else '')+'>'+label+'</a>' for label,url,active in links)
- return '<div class="mobile-nav-panel"><p class="mobile-menu-label">WELCOME HOME</p><div class="mobile-menu-links">'+items+'</div><a class="button mobile-nav-visit" href="visit.html"'+(' aria-current="page"' if current=='Visit Us' else '')+'>Plan Your Visit</a><p class="mobile-menu-note">A place to belong. A faith to live.</p></div>'
+def navigation(current, pages):
+ links=[(label,url) for label,url in pages if label!='Visit Us']
+ items=''.join('<a class="mobile-menu-link'+(' is-current' if label==current else '')+'" href="'+url+'"'+(' aria-current="page"' if label==current else '')+'>'+label+'</a>' for label,url in links)
+ return '<div class="mobile-nav-panel"><p class="mobile-menu-label">WELCOME HOME</p><div class="mobile-menu-links">'+items+'</div><a class="button mobile-nav-visit" href="visit.html"'+(' aria-current="page"' if current=='Visit Us' else '')+'>Visit Us</a><p class="mobile-menu-note">A place to belong. A faith to live.</p></div>'
+
 def quick_links():
  return '<section class="mobile-only mobile-shortcuts" aria-label="Explore our community"><div class="wrap">'+''.join('<a href="'+url+'"><span>'+icon(name)+'</span><strong>'+label+'</strong></a>' for name,label,url in [('book','Word','sermons.html'),('people','Community','about.html'),('hands','Service','#service-times')])+'</div></section>'
-def compact_footer():
- links=[('Our Church','index.html'),('Live','live.html'),('Sermons','sermons.html'),('Prayer','prayer.html'),('Donate','donate.html'),('About','about.html'),('Visit Us','visit.html')]
+def compact_footer(pages):
+ links=pages
  pages=''.join('<a href="'+url+'">'+label+'</a>' for label,url in links)
  return '<div class="mobile-only mobile-footer"><a class="mobile-footer-title" href="index.html"><img src="assets/logo.png" width="36" height="39" alt=""><span>Apostles Church of Christ<strong>Dubai</strong></span></a><p class="mobile-footer-address">Hall 601 · 6th Floor<br>Al Mankhool, Bur Dubai</p><div class="mobile-footer-contact"><a href="https://www.google.com/maps/search/?api=1&amp;query=Bank+Melliran+Building+Al+Mankhool+Bur+Dubai" target="_blank" rel="noopener noreferrer">Get directions</a><a href="tel:+971524373611">+971 52 437 3611</a></div><div class="mobile-footer-social" aria-label="Church social media"><a href="https://www.youtube.com/@Apostleschurchofchristdubai" target="_blank" rel="noopener noreferrer">YouTube</a><a href="https://www.facebook.com/apostlesdubai/" target="_blank" rel="noopener noreferrer">Facebook</a><a href="https://www.instagram.com/apostles_church_of_christ/" target="_blank" rel="noopener noreferrer">Instagram</a></div><details class="mobile-footer-more"><summary>Church links</summary><div>'+pages+'</div></details><div class="mobile-footer-flags" aria-label="United Arab Emirates and Burundi"><img src="assets/flag-uae.svg" width="22" height="13" alt="United Arab Emirates"><img src="assets/flag-burundi.svg" width="22" height="13" alt="Burundi"></div></div>'
 def values():

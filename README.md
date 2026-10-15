@@ -113,7 +113,7 @@ Static checks and DOM simulations pass. Visual layout, real touch interaction an
 
 ## Mobile maintenance
 
-Keep `mobile.css`, `mobile.js`, `assets/mobile/`, and all regenerated HTML pages together when uploading an update. `scripts/mobile_sections.py` owns mobile-only markup and mobile image source sets. The original desktop CSS stays in `styles.css`. Mobile navigation includes Home, About Us, Our Beliefs, Services, Sermons, Events, Gallery, Live Stream, Get Involved and Contact, with Plan Your Visit. Existing Prayer and Donate pages remain accessible through the footer and Get Involved.
+Keep `mobile.css`, `mobile.js`, `assets/mobile/`, and all regenerated HTML pages together when uploading an update. `scripts/mobile_sections.py` owns mobile-only markup and mobile image source sets. The original desktop CSS stays in `styles.css`. Desktop and mobile navigation both use the same seven pages: Our Church, Live, Sermons, Prayer, Donate, About and Visit Us. A single shared page list drives the header and compact footer. Existing Prayer and Donate pages remain accessible through the footer and Get Involved.
 
 Mobile map loading uses the supplied address wording rather than an unverified precise pin. `restreamWatchUrl` can hold a confirmed public viewer URL; until supplied, the Restream button links to the platform and is not a direct church broadcast. The Email Us card asks visitors to request the email on Facebook until `contactEmail` is configured. Future `upcomingEvents` are combined with the next real weekly gatherings, all displayed in Dubai time.
 
@@ -122,3 +122,5 @@ The prepared GitHub Actions workflow includes rendered Chromium/WebKit checks at
 ## 15 October mobile corrections
 
 The inherited desktop backdrop blur is disabled on the mobile header because it trapped the fixed navigation inside the header. The mobile menu now has an explicit viewport height with `vh` / `dvh` fallback, scrolls independently, and uses the existing warm white/orange palette. Its current-link decoration is scoped to prevent stray underlines. The phone footer is replaced by compact church/contact/social details and a collapsed Church links disclosure; the full desktop footer is preserved. The gallery photo count is removed everywhere. Versioned mobile styles/scripts ensure returning visitors fetch the menu fix.
+
+The marked screenshot corrections apply across desktop and phone: matching YouTube/Facebook broadcast buttons; gallery heading and Instagram follow prompt removed; a simpler Luke 1:17 card; the About intro Vision shortcut removed; natural title wrapping; consistent service-card padding, borders and text columns. The original `styles.css` remains unchanged; the explicitly requested shared adjustments are grouped at the end of `mobile.css`. The generator also verifies HTML nesting and rejects stray page/dialog text.
