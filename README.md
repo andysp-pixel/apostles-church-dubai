@@ -1,6 +1,8 @@
 # Apostles Church of Christ Dubai
 
-Seven responsive HTML5 pages: **Our Church, Live, Sermons, Prayer, Donate, About and Visit Us**. Photography-led layout, orange/red church branding, self-hosted Inter and Manrope typography, Cormorant Garamond scripture, smooth slide reveals, a skippable welcome animation and reduced-motion support. No npm install, API key, database or build step is needed.
+Mobile-first presentation for phones up to 767px, with navy, white and gold styling, a sticky menu, touch-sized actions, native swipe gallery and responsive WebP images. The existing desktop stylesheet and layout are preserved. See `MOBILE_QA.md` for completed checks and the browser/device checks still pending.
+
+Seven responsive HTML5 pages: **Our Church, Live, Sermons, Prayer, Donate, About and Visit Us**. Photography-led layout, orange/red church branding, self-hosted Inter and Manrope typography, Cormorant Garamond scripture, smooth slide reveals, a skippable welcome animation and reduced-motion support. No npm install, API key, database or build step is needed to serve the website. Browser-test dependencies are optional and used only for QA.
 
 ## GitHub → Cloudflare Pages
 
@@ -30,7 +32,7 @@ All times are **Asia/Dubai (GST, UTC+4)**.
 | Thursday | 8:00–11:00 PM |
 | Saturday | **3:00–6:00 AM** |
 
-`schedule.js` calculates the next gathering independently of the visitor’s time zone and downloads recurring `.ics` calendars. Saturday is an early morning gathering, as supplied by the owner. The address appears in the footer and Visit Us page: Hall 601, 6th Floor, Bank Melliran Building, Al Mankhool, Bur Dubai, near Sharaf DG Metro. Maps searches the supplied wording; an exact map pin has not been supplied.
+`schedule.js` calculates the next gathering independently of the visitor’s time zone and downloads recurring `.ics` calendars. Saturday is an early morning gathering, as supplied by the owner. The full address appears in the footer and Visit Us page; mobile Home also has a compact location section: Hall 601, 6th Floor, Bank Melliran Building, Al Mankhool, Bur Dubai, near Sharaf DG Metro. Maps searches the supplied wording; an exact map pin has not been supplied.
 
 ## Automatic NIV Verse of the Day
 
@@ -51,6 +53,10 @@ sermons: [
 ```
 
 Entries are ordered by supplied publication dates; the latest sermon entries appear on Our Church. YouTube connects when a visitor plays a recording or follows a link.
+
+## Automatic live from OBS / Restream Standard
+
+The optional YouTube integration is prepared in `cloudflare-live-api/`. See `cloudflare-live-api/ACTIVATE.md` for activation. It uses a separate Cloudflare Worker and the church owner's read-only Google OAuth authorization; no credential appears in public files. Live videos load automatically on the Live page after setting the public `liveStatusUrl` in `config.js`. The field is blank until the API is actually deployed, so existing introduction/YouTube behavior remains usable. Google authorization, Worker deployment and an owner-run broadcast test are still required. API and player behavior are covered by `node scripts/check-live.mjs`; physical-device playback remains unverified.
 
 ## Live video and audio
 
@@ -97,8 +103,18 @@ No membership totals, unconfirmed history, email address or sermon catalogue wer
 
 The permanent church Vision is the owner-supplied excerpt of **Luke 1:17, Amplified Bible, Classic Edition (AMPC)**, with Isaiah 40:3 and Malachi 4:5–6 references. The automatic daily verse remains NIV. The About page now has Values, Vision and Mission sections. Footer flags are small local SVGs for UAE and Burundi; Instagram resolves from the owner’s QR to https://www.instagram.com/apostles_church_of_christ/. Link arrows and decorative stars/hearts/pins have been removed from rendered pages and dynamic link labels.
 
-The gallery runs on Our Church and About as a **continuous right-to-left photo strip**, rather than advancing one slide every six seconds. Several photos can be visible at once. Landscape and portrait images retain their proportions and are shown without cropping. One hidden duplicate sequence creates a seamless loop at a constant 36 pixels per second. Pause/Play, touch scrolling and keyboard navigation are supported. Motion pauses on hover/focus, while offscreen, in hidden tabs, and during touch gestures. Reduced-motion visitors start with autoplay paused; they can explicitly choose Play.
+On desktop, the gallery runs on Our Church and About as a **continuous right-to-left photo strip**, rather than advancing one slide every six seconds. Several photos can be visible at once. Landscape and portrait images retain their proportions and are shown without cropping. One hidden duplicate sequence creates a seamless loop at a constant 36 pixels per second. Pause/Play, touch scrolling and keyboard navigation are supported. Motion pauses on hover/focus, while offscreen, in hidden tabs, and during touch gestures. Reduced-motion visitors start with autoplay paused; they can explicitly choose Play.
+
+On phones the same gallery becomes a native horizontal swipe carousel with equal 4:3 image sizes. There is no mobile autoplay or duplicate photo sequence. Mobile photos use WebP source sets; desktop keeps the original image URLs. Run `python3 scripts/mobile_images.py` after adding photographs (requires Pillow) and then regenerate pages.
 
 To add real church photos, copy authorised originals under `assets/gallery/` (or `dist/assets/gallery/` in the Sites checkout). Add entries to `scripts/gallery.json` using `src`, accurate `alt`, `caption`, `width`, `height`, `sourceFile` and `sha256`; regenerate with `python3 scripts/build_pages.py`. The checks verify photograph checksums and gallery behavior. No npm install or new hosting service is needed.
 
 Static checks and DOM simulations pass. Visual layout, real touch interaction and playback across physical devices/browser versions remain unverified in this environment.
+
+## Mobile maintenance
+
+Keep `mobile.css`, `mobile.js`, `assets/mobile/`, and all regenerated HTML pages together when uploading an update. `scripts/mobile_sections.py` owns mobile-only markup and mobile image source sets. The original desktop CSS stays in `styles.css`. Mobile navigation includes Home, About Us, Our Beliefs, Services, Sermons, Events, Gallery, Live Stream, Get Involved and Contact, with Plan Your Visit. Existing Prayer and Donate pages remain accessible through the footer and Get Involved.
+
+Mobile map loading uses the supplied address wording rather than an unverified precise pin. `restreamWatchUrl` can hold a confirmed public viewer URL; until supplied, the Restream button links to the platform and is not a direct church broadcast. The Email Us card asks visitors to request the email on Facebook until `contactEmail` is configured. Future `upcomingEvents` are combined with the next real weekly gatherings, all displayed in Dubai time.
+
+The prepared GitHub Actions workflow includes rendered Chromium/WebKit checks at 320, 360, 375, 390, 412 and 430px. Those rendered checks have not been run in this editing environment; consult `MOBILE_QA.md`. This export does not update the existing public Cloudflare site until its contents are uploaded to the connected repository and a deployment succeeds.

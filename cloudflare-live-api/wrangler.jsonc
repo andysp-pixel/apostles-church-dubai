@@ -1,0 +1,10 @@
+{
+  "name": "apostles-church-live-api",
+  "main": "worker.mjs",
+  "compatibility_date": "2026-10-14",
+  "workers_dev": true,
+  "vars": {
+    "YOUTUBE_CHANNEL_ID": "",
+    "ALLOWED_ORIGINS": "https://apostleschurchdubai.org,https://www.apostleschurchdubai.org"
+  }
+}

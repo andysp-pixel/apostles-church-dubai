@@ -6,7 +6,7 @@ import { createHash } from 'node:crypto';
 const root=path.resolve(import.meta.dirname,'..'), dist=fs.existsSync(path.join(root,'dist'))?path.join(root,'dist'):root;
 const assert=(ok,text)=>{if(!ok)throw new Error(text);};
 const pages=['index.html','live.html','sermons.html','prayer.html','donate.html','about.html','visit.html'];
-for(const name of ['app.js','config.js','welcome.js','schedule.js','church.js','gallery.js'])execFileSync(process.execPath,['--check',path.join(dist,name)]);
+for(const name of ['app.js','config.js','live-status.js','welcome.js','schedule.js','church.js','gallery.js','mobile.js'])execFileSync(process.execPath,['--check',path.join(dist,name)]);
 const contents=new Map(pages.map(p=>[p,fs.readFileSync(path.join(dist,p),'utf8')]));
 for(const [file,html] of contents){
  assert(/^<!doctype html>/i.test(html),'Missing HTML5 doctype in '+file);
@@ -24,11 +24,16 @@ for(const [file,html] of contents){
  assert(nav,'Missing primary nav in '+file);
  for(const target of pages.filter(p=>p!=='visit.html'))assert(nav.includes('href="'+target+'"'),'Missing page link in '+file);
  const header=html.match(/<header\b[\s\S]*?<\/header>/)[0];
- assert((header.match(/aria-current="page"/g)||[]).length===1,'Missing active page in '+file);
+ const desktopHeader=header.replace(/<div class="mobile-nav-panel">[\s\S]*?<\/nav>/,'</nav>');
+ assert((desktopHeader.match(/aria-current="page"/g)||[]).length===1,'Missing desktop active page in '+file);
+ const mobileNav=header.match(/<div class="mobile-nav-panel">[\s\S]*?<\/nav>/)?.[0];
+ const mobileCurrent=(mobileNav?.match(/aria-current="page"/g)||[]).length;
+ assert(mobileNav&&mobileCurrent===(['prayer.html','donate.html'].includes(file)?0:1),'Invalid mobile active page in '+file);
  assert(header.includes('href="visit.html"'),'Visit button missing');
  assert(html.includes('<address>'),'Missing footer address in '+file);
  const count=(html.match(/Bank Melliran Building/g)||[]).length;assert(count===(file==='visit.html'?2:1),'Repeated address in '+file);
- assert(nav.includes('>Our Church</a>')&&!nav.includes('>Home</a>'),'Home label must be Our Church');
+ assert(nav.split('<div class="mobile-nav-panel">')[0].includes('>Our Church</a>'),'Desktop Home label must be Our Church');
+ assert(nav.includes('>Home</a>'),'Mobile Home link missing');
  assert(html.includes('id="welcome-intro"')&&html.includes('id="welcome-skip"'),'Welcome controls missing');
  assert(html.includes('Welcome to<br><em>Our Church</em>'),'Welcome wording mismatch');
  assert(html.includes('footer-column'),'Missing detailed footer in '+file);
@@ -51,7 +56,7 @@ const css=fs.readFileSync(path.join(dist,'styles.css'),'utf8');assert(css.includ
 for(const m of fs.readFileSync(path.join(dist,'assets/fonts.css'),'utf8').matchAll(/url\(['"]?([^'"\)]+)['"]?\)/g))assert(fs.existsSync(path.join(dist,'assets',m[1])),'Missing local font');
 const context={window:{}};vm.runInNewContext(fs.readFileSync(path.join(dist,'config.js'),'utf8'),context);const config=context.window.CHURCH_CONFIG;
 assert(Array.isArray(config.upcomingEvents),'Events must be an array');
-for(const key of ['videoHlsUrl','audioStreamUrl','donationUrl'])if(config[key])assert(new URL(config[key]).protocol==='https:','Public URL must use HTTPS');
+for(const key of ['videoHlsUrl','audioStreamUrl','liveStatusUrl','donationUrl','restreamWatchUrl'])if(config[key])assert(new URL(config[key]).protocol==='https:','Public URL must use HTTPS');
 for(const e of config.upcomingEvents)assert(typeof e.title==='string'&&/\+04:00$/.test(e.startsAt)&&Number.isFinite(Date.parse(e.startsAt)),'Invalid future event');
 assert(fs.statSync(path.join(dist,'assets/intro.mp4')).size>10000,'Intro missing');
 const scheduleContext={window:{}};vm.runInNewContext(fs.readFileSync(path.join(dist,'schedule.js'),'utf8'),scheduleContext);const schedule=scheduleContext.window.ChurchSchedule;

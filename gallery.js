@@ -9,6 +9,7 @@
     if (photographs.length < 2 || !window.requestAnimationFrame) return;
     const motion = window.matchMedia('(prefers-reduced-motion: reduce)');
     const hover = window.matchMedia('(hover: hover)');
+    const mobile = window.matchMedia('(max-width: 767px)');
     const copy = sequence.cloneNode(true);
     copy.classList.add('gallery-loop-group');
     copy.setAttribute('aria-hidden', 'true');
@@ -20,7 +21,7 @@
     let userPaused = motion.matches, chosenPause = false, hovering = false, focused = false, gesture = false;
     let inView = !('IntersectionObserver' in window);
     const wrap = value => distance > 0 ? ((value % distance) + distance) % distance : 0;
-    const canRun = () => distance > 0 && !userPaused && !hovering && !focused && !gesture && inView && !document.hidden;
+    const canRun = () => !mobile.matches && distance > 0 && !userPaused && !hovering && !focused && !gesture && inView && !document.hidden;
     function buttonState() {
       button.textContent = userPaused ? 'Play gallery' : 'Pause gallery';
       button.setAttribute('aria-label', userPaused ? 'Play continuous photo gallery' : 'Pause continuous photo gallery');
@@ -36,12 +37,15 @@
     function update() {
       if (frameId) window.cancelAnimationFrame(frameId);
       frameId = 0; lastTime = null;
+      if (mobile.matches) { button.hidden = true; return; }
+      button.hidden = false;
       offset = wrap(viewport.scrollLeft);
       viewport.scrollLeft = offset;
       buttonState();
       if (canRun()) frameId = window.requestAnimationFrame(frame);
     }
     function measure() {
+      if (mobile.matches) { update(); return; }
       const progress = distance ? wrap(viewport.scrollLeft) / distance : 0;
       distance = copy.offsetLeft - sequence.offsetLeft;
       viewport.scrollLeft = progress * distance;
@@ -81,6 +85,7 @@
     });
     document.addEventListener('visibilitychange', update);
     window.addEventListener('resize', measure);
+    if (mobile.addEventListener) mobile.addEventListener('change', measure); else mobile.addListener?.(measure);
     const preferenceChanged = () => { if (motion.matches) userPaused = true; else if (!chosenPause) userPaused = false; update(); };
     if (motion.addEventListener) motion.addEventListener('change', preferenceChanged); else motion.addListener?.(preferenceChanged);
     if ('IntersectionObserver' in window) {

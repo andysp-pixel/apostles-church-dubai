@@ -5,7 +5,7 @@ import assert from 'node:assert/strict';
 const root=path.resolve(import.meta.dirname,'..');
 const dist=fs.existsSync(path.join(root,'dist'))?path.join(root,'dist'):root;
 const source=fs.readFileSync(path.join(dist,'gallery.js'),'utf8');
-function run({reduced=false,hasHover=true,integerScroll=false,count=3}={}){
+function run({reduced=false,hasHover=true,integerScroll=false,count=3,isMobile=false}={}){
  let time=0,seq=0,scroll=0;const timers=new Map(),frames=new Map();
  const setTimeout=(fn,ms)=>{const id=++seq;timers.set(id,{fn,at:time+ms});return id;};
  const clearTimeout=id=>timers.delete(id);
@@ -18,12 +18,12 @@ function run({reduced=false,hasHover=true,integerScroll=false,count=3}={}){
  Object.defineProperty(viewport,'scrollLeft',{get:()=>scroll,set:v=>{scroll=integerScroll?Math.floor(v):v;}});
  const button={...events(),hidden:true};
  const shell={...events(),querySelector:s=>({'.gallery-viewport':viewport,'.gallery-track':track,'[data-gallery-pause]':button}[s]),contains:()=>false};
- const motion={matches:reduced,...events()},hover={matches:hasHover};
+ const motion={matches:reduced,...events()},hover={matches:hasHover},mobile={matches:isMobile,...events()};
  const document={...events(),hidden:false,querySelectorAll:()=>[shell]};
- const window={...events(),matchMedia:s=>s.includes('prefers-reduced-motion')?motion:hover,PointerEvent:class{},requestAnimationFrame:fn=>{const id=++seq;frames.set(id,fn);return id;},cancelAnimationFrame:id=>frames.delete(id)};
+ const window={...events(),matchMedia:s=>s.includes('prefers-reduced-motion')?motion:s.includes('max-width: 767px')?mobile:hover,PointerEvent:class{},requestAnimationFrame:fn=>{const id=++seq;frames.set(id,fn);return id;},cancelAnimationFrame:id=>frames.delete(id)};
  vm.runInNewContext(source,{document,window,setTimeout,clearTimeout});
  const step=ms=>{time+=ms;const pending=[...frames];frames.clear();for(const [,fn] of pending)fn(time);for(const [id,job] of [...timers])if(job.at<=time){timers.delete(id);job.fn();}};
- return {viewport,button,shell,timers,frames,step,document,window,track,motion};
+ return {viewport,button,shell,timers,frames,step,document,window,track,motion,mobile};
 }
 const a=run();assert.equal(a.track.copy.attributes['aria-hidden'],'true');assert.equal(a.button.hidden,false);assert.equal(a.frames.size,1);
 a.step(0);for(let i=0;i<60;i++)a.step(1000/60);assert.ok(Math.abs(a.viewport.scrollLeft-36)<0.001,'Continuous motion must advance 36 px per second');
@@ -40,3 +40,5 @@ const c=run({hasHover:false});c.shell.events.mouseenter();assert.equal(c.frames.
 const d=run({integerScroll:true});d.step(0);for(let i=0;i<120;i++)d.step(1000/120);assert.ok(d.viewport.scrollLeft>=35,'Fractional steps must accumulate on integer-scroll browsers');
 const one=run({count:1});assert.equal(one.frames.size,0);assert.equal(one.button.hidden,true);
 console.log('PASS: continuous motion speed and seamless wrap; pause/play, hover/focus/hidden-tab and touch handling; reduced motion; keyboard scrolling; integer-scroll compatibility (DOM simulation; browser layout unverified).');
+
+const phone=run({isMobile:true,hasHover:false});assert.equal(phone.frames.size,0);assert.equal(phone.button.hidden,true);phone.viewport.scrollLeft=180;phone.window.events.resize();assert.equal(phone.viewport.scrollLeft,180,'Native swipe position must survive mobile resize');phone.mobile.matches=false;phone.mobile.events.change();assert.equal(phone.frames.size,1,'Desktop autoplay should return when leaving the mobile breakpoint');phone.mobile.matches=true;phone.mobile.events.change();assert.equal(phone.frames.size,0);assert.equal(phone.button.hidden,true);console.log('PASS: phone gallery has no animation frames or autoplay; native swipe position retained; desktop behavior returns across breakpoints.');

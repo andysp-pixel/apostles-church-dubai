@@ -33,6 +33,6 @@
   function onKey(event){if(event.key==='Escape'){event.preventDefault();finish();}else if(event.key==='Tab'){event.preventDefault();skip.focus({preventScroll:true});}}
   skip.addEventListener('click',finish);
   document.addEventListener('keydown',onKey);
-  timer=setTimeout(finish,reduced?650:2200);
+  timer=setTimeout(finish,reduced?650:(window.matchMedia('(max-width: 767px)').matches?900:2200));
   window.addEventListener('pageshow',event=>{if(event.persisted)finish();},{once:true});
 })();

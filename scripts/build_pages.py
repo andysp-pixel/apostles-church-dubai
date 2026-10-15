@@ -4,6 +4,7 @@ import json
 from html import escape
 import modern_sections as modern
 import about_sections as about
+import mobile_sections as mobile
 
 ROOT = Path(__file__).resolve().parent.parent
 DIST = ROOT / 'dist' if (ROOT / 'dist').is_dir() else ROOT
@@ -22,7 +23,7 @@ def logo():
 
 def header(current):
     return f'''<div class="topline"><span>Christ’s ambassadors. A church for the nations.</span><a href="visit.html">Sunday &amp; Thursday · 8 PM <span aria-hidden="true">↗</span></a></div>
-    <header class="header"><div class="header-brand">{logo()}</div><button class="menu-toggle" aria-controls="navigation" aria-expanded="false" aria-label="Open menu"><span></span><span></span></button><nav id="navigation" aria-label="Main navigation">{nav(current, False)}</nav><a class="header-visit" href="visit.html"{(' aria-current="page"' if current == 'Visit Us' else '')}><span class="pin-icon" aria-hidden="true">⌖</span> Visit us <span aria-hidden="true">↗</span></a></header>'''
+    <header class="header"><div class="header-brand">{logo()}</div><button class="menu-toggle" aria-controls="navigation" aria-expanded="false" aria-label="Open menu"><span></span><span></span></button><nav id="navigation" aria-label="Main navigation">{nav(current, False)}{mobile.navigation(current)}</nav><a class="header-visit" href="visit.html"{(' aria-current="page"' if current == 'Visit Us' else '')}><span class="pin-icon" aria-hidden="true">⌖</span> Visit us <span aria-hidden="true">↗</span></a></header>'''
 
 def footer():
     return f'''<footer class="footer-new"><div class="wrap"><div class="footer-grid"><div class="footer-brand">{logo()}<p>Preparing a people<br>for the Lord.</p><a class="footer-scripture" href="about.html#our-vision">Our Vision · Luke 1:17</a><div class="footer-flags" aria-label="United Arab Emirates and Burundi"><img src="assets/flag-uae.svg" width="25" height="15" alt="United Arab Emirates flag" title="United Arab Emirates"><img src="assets/flag-burundi.svg" width="25" height="15" alt="Burundi flag" title="Burundi"></div></div><div class="footer-column"><h2>Visit our church</h2><address><strong>Hall 601 · 6th Floor</strong><br>Bank Melliran Building<br>Al Mankhool, Bur Dubai<br>Dubai, United Arab Emirates</address><a class="footer-map" href="{MAP}" target="_blank" rel="noopener noreferrer">Near Sharaf DG Metro<br>Get directions</a></div><div class="footer-column"><h2>Explore</h2>{nav(None)}</div><div class="footer-column"><h2>Contact</h2><a href="{FB}" target="_blank" rel="noopener noreferrer">Message the church</a><a href="prayer.html">Prayer requests</a><a href="visit.html">Plan your visit</a><a class="configured-email" hidden></a><a class="configured-phone" href="tel:+971524373611">+971 52 437 3611</a><p>Reach us through our<br>official Facebook page.</p></div><div class="footer-column"><h2>Stay connected</h2><a class="social-pill" href="{YT}" target="_blank" rel="noopener noreferrer">YouTube</a><a class="social-pill" href="{FB}" target="_blank" rel="noopener noreferrer">Facebook</a><a class="social-pill" href="{IG}" target="_blank" rel="noopener noreferrer">Instagram</a></div></div><div class="footer-bottom"><span>© <span id="year">2026</span> Apostles Church of Christ Dubai</span><span>Faith. Fellowship. Hope.</span><button class="subtle-link" id="privacy-open">Privacy</button><a href="#top">Back to top</a></div></div></footer>'''
@@ -35,7 +36,8 @@ def welcome_intro():
 
 def page(current, title, description, body):
     html = f'''<!doctype html>
-<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>{title} — Apostles Church of Christ Dubai</title><meta name="description" content="{description}"><meta name="theme-color" content="#f9f7f2"><meta property="og:title" content="{title} — Apostles Church of Christ Dubai"><meta property="og:description" content="{description}"><meta property="og:type" content="website"><link rel="icon" href="assets/logo.png"><link rel="stylesheet" href="assets/fonts.css"><link rel="stylesheet" href="styles.css"><script src="config.js" defer></script><script src="assets/hls.min.js" defer></script><script src="welcome.js" defer></script><script src="app.js" defer></script><script src="schedule.js" defer></script><script src="church.js" defer></script><script src="gallery.js" defer></script></head><body id="top" data-page="{current.lower().replace(' ', '-')}">{welcome_intro()}<a class="skip-link" href="#main">Skip to content</a>{header(current)}<main id="main">{body}</main>{footer()}{dialogs()}<noscript><div class="noscript">The video controls and prayer draft need JavaScript. You can still read our church information and visit <a href="{YT}">YouTube</a> or <a href="{FB}">Facebook</a>.</div></noscript></body></html>'''
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>{title} — Apostles Church of Christ Dubai</title><meta name="description" content="{description}"><meta name="theme-color" content="#f9f7f2"><meta property="og:title" content="{title} — Apostles Church of Christ Dubai"><meta property="og:description" content="{description}"><meta property="og:type" content="website"><link rel="icon" href="assets/logo.png"><link rel="stylesheet" href="assets/fonts.css"><link rel="stylesheet" href="styles.css"><link rel="stylesheet" href="mobile.css"><script src="config.js" defer></script>{('<script src="assets/hls.min.js" defer></script>' if current == 'Live' else '')}<script src="welcome.js" defer></script><script src="live-status.js" defer></script><script src="app.js" defer></script><script src="schedule.js" defer></script><script src="church.js" defer></script><script src="gallery.js" defer></script><script src="mobile.js" defer></script></head><body id="top" data-page="{current.lower().replace(' ', '-')}">{welcome_intro()}<a class="skip-link" href="#main">Skip to content</a>{header(current)}<main id="main">{body}</main>{footer()}{dialogs()}<noscript><div class="noscript">The video controls and prayer draft need JavaScript. You can still read our church information and visit <a href="{YT}">YouTube</a> or <a href="{FB}">Facebook</a>.</div></noscript></body></html>'''
+    html = mobile.decorate(html)
     output = next(url for name,url in PAGES if name == current)
     # Plain link labels and authentic church branding: no decorative arrows or stars.
     import re
@@ -56,7 +58,15 @@ home_cta = '''<section class="pathways wrap section"><div class="section-heading
 
 gallery_items = json.loads((ROOT / 'scripts/gallery.json').read_text())
 gallery = about.gallery_section(gallery_items)
-page('Our Church', 'Our Church', 'A place to belong. A faith to live. Meet Apostles Church of Christ Dubai, worship online, and connect with our community.', modern.hero() + modern.schedule_section() + modern.welcome_section() + about.vision_section() + modern.verse_section() + modern.recent_section() + gallery + home_cta)
+original_vision = about.vision_section
+
+def responsive_vision():
+    html = original_vision()
+    detail = '<details class="mobile-only mobile-vision-details"><summary>Our Vision · Luke 1:17</summary><blockquote>' + escape(about.VISION_TEXT) + '</blockquote><p>' + about.VISION_REFERENCE + '</p><a class="text-link" href="about.html#our-vision">Read our vision</a></details>'
+    # Details summary only supplements Home; other pages show the complete scripture.
+    return html.replace('</section>', detail + '</section>')
+
+page('Our Church', 'Our Church', 'A place to belong. A faith to live. Meet Apostles Church of Christ Dubai, worship online, and connect with our community.', modern.hero() + mobile.quick_links() + modern.schedule_section() + modern.welcome_section() + responsive_vision() + modern.verse_section() + modern.recent_section() + mobile.events() + gallery + mobile.location() + mobile.contact() + home_cta)
 
 page('Live', 'Church Online', 'Watch our church broadcasts, listen to available audio, and explore worship and messages from Apostles Church of Christ Dubai.', C['live'].replace('<h2>One church.<br><em>Wherever you are.</em></h2>', '<h1>One church.<br><em>Wherever you are.</em></h1>').replace('02 / CHURCH ONLINE', 'CHURCH ONLINE'))
 

@@ -1,0 +1,236 @@
+{
+  "version": 1,
+  "format": "webp",
+  "quality": 80,
+  "resize": "proportional; no crop or upscaling",
+  "images": {
+    "assets/gallery/worship-hall.jpg": {
+      "width": 1536,
+      "height": 1024,
+      "bytes": 408867,
+      "sha256": "fe62bb90de20f9220193d756e9d543fe39d2cb8079b8d6dec4305500dd8a4f8e",
+      "variants": [
+        {
+          "src": "assets/mobile/worship-hall-360.webp",
+          "width": 360,
+          "height": 240,
+          "bytes": 22058
+        },
+        {
+          "src": "assets/mobile/worship-hall-640.webp",
+          "width": 640,
+          "height": 427,
+          "bytes": 53810
+        },
+        {
+          "src": "assets/mobile/worship-hall-960.webp",
+          "width": 960,
+          "height": 640,
+          "bytes": 95952
+        }
+      ]
+    },
+    "assets/gallery/congregation-praise.jpg": {
+      "width": 1536,
+      "height": 1024,
+      "bytes": 417732,
+      "sha256": "72d3536bb033d00ea8bd34c585f595ef4d18da730449530129e4f5c80014d5da",
+      "variants": [
+        {
+          "src": "assets/mobile/congregation-praise-360.webp",
+          "width": 360,
+          "height": 240,
+          "bytes": 24326
+        },
+        {
+          "src": "assets/mobile/congregation-praise-640.webp",
+          "width": 640,
+          "height": 427,
+          "bytes": 58042
+        },
+        {
+          "src": "assets/mobile/congregation-praise-960.webp",
+          "width": 960,
+          "height": 640,
+          "bytes": 102548
+        }
+      ]
+    },
+    "assets/gallery/choir-singer.jpg": {
+      "width": 1024,
+      "height": 1536,
+      "bytes": 246855,
+      "sha256": "fdb1f2fa508f6ddf2a418188a068bd48bf8d5537e9b295ac998b421c8e98f1fa",
+      "variants": [
+        {
+          "src": "assets/mobile/choir-singer-360.webp",
+          "width": 360,
+          "height": 540,
+          "bytes": 23470
+        },
+        {
+          "src": "assets/mobile/choir-singer-640.webp",
+          "width": 640,
+          "height": 960,
+          "bytes": 45886
+        },
+        {
+          "src": "assets/mobile/choir-singer-960.webp",
+          "width": 960,
+          "height": 1440,
+          "bytes": 73640
+        }
+      ]
+    },
+    "assets/gallery/choir-monochrome.jpg": {
+      "width": 1536,
+      "height": 1024,
+      "bytes": 269904,
+      "sha256": "289574b904f157842385e88ee8dac82fcfd774cddef71f3053607e19fbbe1028",
+      "variants": [
+        {
+          "src": "assets/mobile/choir-monochrome-360.webp",
+          "width": 360,
+          "height": 240,
+          "bytes": 13742
+        },
+        {
+          "src": "assets/mobile/choir-monochrome-640.webp",
+          "width": 640,
+          "height": 427,
+          "bytes": 29934
+        },
+        {
+          "src": "assets/mobile/choir-monochrome-960.webp",
+          "width": 960,
+          "height": 640,
+          "bytes": 50240
+        }
+      ]
+    },
+    "assets/gallery/congregation-worship.jpg": {
+      "width": 1536,
+      "height": 1024,
+      "bytes": 375509,
+      "sha256": "b81f7dbe486f4c0bdac731eacc0fac42e459184feee76f3f98b3ce9faa9c4ac6",
+      "variants": [
+        {
+          "src": "assets/mobile/congregation-worship-360.webp",
+          "width": 360,
+          "height": 240,
+          "bytes": 22274
+        },
+        {
+          "src": "assets/mobile/congregation-worship-640.webp",
+          "width": 640,
+          "height": 427,
+          "bytes": 53732
+        },
+        {
+          "src": "assets/mobile/congregation-worship-960.webp",
+          "width": 960,
+          "height": 640,
+          "bytes": 94720
+        }
+      ]
+    },
+    "assets/gallery/choir-gathering.jpg": {
+      "width": 1536,
+      "height": 1024,
+      "bytes": 388655,
+      "sha256": "868f65a47802e89972d9e075937818901fafbafb1c982278048cbc272cb7ccad",
+      "variants": [
+        {
+          "src": "assets/mobile/choir-gathering-360.webp",
+          "width": 360,
+          "height": 240,
+          "bytes": 22554
+        },
+        {
+          "src": "assets/mobile/choir-gathering-640.webp",
+          "width": 640,
+          "height": 427,
+          "bytes": 52376
+        },
+        {
+          "src": "assets/mobile/choir-gathering-960.webp",
+          "width": 960,
+          "height": 640,
+          "bytes": 91128
+        }
+      ]
+    },
+    "assets/gallery/congregation-seated.jpg": {
+      "width": 1536,
+      "height": 1024,
+      "bytes": 378040,
+      "sha256": "d496a67174a5cfba49deb70e1cffa657433a3c263966bc7c73a069cf4a76d70d",
+      "variants": [
+        {
+          "src": "assets/mobile/congregation-seated-360.webp",
+          "width": 360,
+          "height": 240,
+          "bytes": 19760
+        },
+        {
+          "src": "assets/mobile/congregation-seated-640.webp",
+          "width": 640,
+          "height": 427,
+          "bytes": 48086
+        },
+        {
+          "src": "assets/mobile/congregation-seated-960.webp",
+          "width": 960,
+          "height": 640,
+          "bytes": 87458
+        }
+      ]
+    },
+    "assets/pastor.webp": {
+      "width": 529,
+      "height": 659,
+      "bytes": 54824,
+      "sha256": "6f1d93434ac7448d8aca7655f5c1fbbe491eeb25201af7d9ae6a6d40b2153373",
+      "variants": [
+        {
+          "src": "assets/mobile/pastor-360.webp",
+          "width": 360,
+          "height": 448,
+          "bytes": 16692
+        },
+        {
+          "src": "assets/mobile/pastor-529.webp",
+          "width": 529,
+          "height": 659,
+          "bytes": 27590
+        }
+      ]
+    },
+    "assets/intro-poster.jpg": {
+      "width": 1280,
+      "height": 720,
+      "bytes": 20629,
+      "sha256": "e21e3743b0a9cc07c2627f91b6e9d01ee7a99af21672b0b55a0178cabacea6cb",
+      "variants": [
+        {
+          "src": "assets/mobile/intro-poster-360.webp",
+          "width": 360,
+          "height": 202,
+          "bytes": 2236
+        },
+        {
+          "src": "assets/mobile/intro-poster-640.webp",
+          "width": 640,
+          "height": 360,
+          "bytes": 4968
+        },
+        {
+          "src": "assets/mobile/intro-poster-960.webp",
+          "width": 960,
+          "height": 540,
+          "bytes": 8660
+        }
+      ]
+    }
+  }
+}

@@ -1,6 +1,8 @@
 /* Public settings only. Never put API keys or OBS ingest/stream keys in this file. */
 window.CHURCH_CONFIG = {
   youtubeChannel: 'https://www.youtube.com/@Apostleschurchofchristdubai',
+  // Optional confirmed public Restream viewing page. Blank uses the Restream platform link.
+  restreamWatchUrl: '',
   facebookPage: 'https://www.facebook.com/apostlesdubai/',
   instagramPage: 'https://www.instagram.com/apostles_church_of_christ/',
   // Public details confirmed by the church. Leave blank until supplied.
@@ -10,6 +12,9 @@ window.CHURCH_CONFIG = {
   donationUrl: '',
   // Cloudflare Stream customer playback URL, or another public HLS playback URL.
   videoHlsUrl: '',
+  // Public HTTPS URL of the separately deployed YouTube status Worker (/api/live).
+  // Configure Google OAuth credentials in Cloudflare Secrets, never in this file.
+  liveStatusUrl: '',
   // A separate genuine audio-only HLS/AAC/MP3 stream. Not a hidden video stream.
   audioStreamUrl: '',
   // Add confirmed future events. ISO dates must include the Dubai +04:00 offset.
