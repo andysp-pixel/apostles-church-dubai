@@ -82,5 +82,29 @@ els['#watch-tab'].events.click();assert.ok(area.querySelector('iframe[data-live-
 callbacks.onStatus({state:'offline'});assert.equal(area.querySelector('iframe[data-live-id]'),null);
 els['#intro-play'].events.click();assert.ok(area.querySelector('video'));
 callbacks.onStatus({state:'live',videoId:id,title:'Church service'});assert.ok(area.querySelector('video'),'Live discovery must not interrupt a deliberately selected introduction');
+// A fixed public event can play before discovery is activated, without a false live claim.
+function selectedBroadcast(value,withApi=false){
+ const nodes=Object.fromEntries(names.map(name=>['#'+name,new El()]));nodes['.status-dot']=new El();nodes['#watch-tab'].setAttribute('aria-selected','true');
+ let opened='',status;
+ const context={...browser,window:{...browser.window,CHURCH_CONFIG:{youtubeBroadcastId:value,liveStatusUrl:withApi?'https://worker.example/api/live':''},open:url=>opened=url,ChurchLiveStatus:{monitor(opts){status=opts;return{start(){},stop(){}};}}},document:{...browser.document,querySelector:sel=>nodes[sel]||null,head:new El()}};
+ vm.runInNewContext(fs.readFileSync(path.join(dist,'app.js'),'utf8'),context);
+ return {nodes,get opened(){return opened;},get status(){return status;}};
+}
+const selected=selectedBroadcast('5F8Do2ssXno');
+assert.ok(selected.nodes['#player-area'].querySelector('iframe[data-live-id]').src.includes('/5F8Do2ssXno?'));
+assert.equal(selected.nodes['#broadcast-status'].textContent,'Church broadcast','A fixed link must not be labelled live');
+selected.nodes['#watch-live'].events.click();assert.equal(selected.opened,'https://www.youtube.com/watch?v=5F8Do2ssXno');
+selected.nodes['#listen-tab'].events.click();assert.equal(selected.nodes['#player-area'].querySelector('iframe[data-live-id]'),null);
+selected.nodes['#watch-tab'].events.click();assert.ok(selected.nodes['#player-area'].querySelector('iframe[data-live-id]'));
+for(const bad of ['bad','https://example.com',{},12345678901])assert.equal(selectedBroadcast(bad).nodes['#player-area'].querySelector('iframe[data-live-id]'),null);
+const automatic=selectedBroadcast('5F8Do2ssXno',true);
+const sameVideo=automatic.nodes['#player-area'].querySelector('iframe[data-live-id]');
+automatic.status.onStatus({state:'live',videoId:'5F8Do2ssXno',title:'Church broadcast'});
+assert.equal(automatic.nodes['#broadcast-status'].textContent,'Live now');
+assert.equal(automatic.nodes['#player-area'].querySelector('iframe[data-live-id]'),sameVideo,'Confirming a selected video must not reload it');
+automatic.status.onStatus({state:'live',videoId:id,title:'New church broadcast'});
+assert.equal(automatic.nodes['#player-area'].querySelector('iframe[data-live-id]').dataset.liveId,id);
+automatic.status.onStatus({state:'offline'});assert.equal(automatic.nodes['#player-area'].querySelector('iframe[data-live-id]'),null);
 console.log('PASS: read-only OAuth, token reuse, cache/query handling, concurrent visitors, public/channel/embed filtering, unavailable distinction, secret redaction, CORS and API methods.');
 console.log('PASS: client HTTPS/status validation, error/hidden-page handling, automatic muted live iframe, no reload on polling, Watch/Listen switching, offline removal and intro preference.');
+console.log('PASS: selected public broadcast embed, neutral status, exact YouTube fallback, audio/video switching, invalid ID rejection and future automatic discovery.');

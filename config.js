@@ -1,6 +1,9 @@
 /* Public settings only. Never put API keys or OBS ingest/stream keys in this file. */
 window.CHURCH_CONFIG = {
   youtubeChannel: 'https://www.youtube.com/@Apostleschurchofchristdubai',
+  // One owner-supplied broadcast. It may show a waiting room, live video or replay.
+  // Replace for a new event, or activate liveStatusUrl below for automatic discovery.
+  youtubeBroadcastId: '5F8Do2ssXno',
   // Optional confirmed public Restream viewing page. Blank uses the Restream platform link.
   restreamWatchUrl: '',
   facebookPage: 'https://www.facebook.com/apostlesdubai/',

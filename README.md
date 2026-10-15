@@ -60,7 +60,7 @@ The optional YouTube integration is prepared in `cloudflare-live-api/`. See `clo
 
 ## Live video and audio
 
-The player lives on `live.html`. Until a stream is configured, Watch opens the official YouTube channel. Set public playback URLs in `config.js`:
+The player lives on `live.html`. The owner-supplied YouTube broadcast `5F8Do2ssXno` is configured in `youtubeBroadcastId`. It loads in the responsive player on Live; Watch on YouTube opens the same broadcast as a fallback. A selected video is labelled “Church broadcast”, without claiming it is live. YouTube may show its waiting room or replay; availability and embedding permission must be confirmed by the owner in a real browser. This fixed video does not discover future events. Replace the ID for a new broadcast, or activate the OAuth status Worker for automatic discovery. The supplied Restream Pairs invitation is not a viewer URL and is not published. Set public playback URLs in `config.js`:
 
 - `videoHlsUrl`: public HTTPS HLS playback manifest, such as Cloudflare Stream Live. Configure the encoder/OBS and streaming service separately.
 - `audioStreamUrl`: separate audio-only MP3, AAC or HLS broadcast. This avoids downloading hidden video.

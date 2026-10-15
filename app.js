@@ -5,6 +5,7 @@
   const safeHttps = value => { try { const url = new URL(value); return url.protocol === 'https:' ? url.href : ''; } catch { return ''; } };
   const youtube = safeHttps(config.youtubeChannel) || 'https://www.youtube.com/@Apostleschurchofchristdubai';
   const facebook = safeHttps(config.facebookPage) || 'https://www.facebook.com/apostlesdubai/';
+  const broadcastId = typeof config.youtubeBroadcastId==='string'&&/^[\w-]{11}$/.test(config.youtubeBroadcastId)?config.youtubeBroadcastId:'';
   let toastTimer;
   function notify(message) { const el=$('#toast'); if(!el)return; el.textContent=message;el.classList.add('visible');clearTimeout(toastTimer);toastTimer=setTimeout(()=>el.classList.remove('visible'),4000); }
   async function copyText(text, success) { try { await navigator.clipboard.writeText(text); notify(success); return true; } catch { notify('Select the text and copy it manually.'); return false; } }
@@ -38,8 +39,10 @@
   let youtubeLive=null;
   let autoLive=true;
   const area=$('#player-area');
-  function showYouTubeLive(){
-    if(!area||youtubeLive?.state!=='live')return;
+  function showYouTubeBroadcast(){
+    if(!area||!['live','selected'].includes(youtubeLive?.state))return;
+    const confirmedLive=youtubeLive.state==='live';setStatus(confirmedLive?'Live now':'Church broadcast',confirmedLive);
+    $('#player-notice').textContent=confirmedLive?'The church is live. Use the player controls to turn on sound.':'Use the player controls to turn on sound. If the video cannot play here, select Watch on YouTube.';
     const existing=area.querySelector('iframe[data-live-id]');
     if(existing?.dataset.liveId===youtubeLive.videoId)return;
     stopLiveMedia();area.replaceChildren();
@@ -48,8 +51,7 @@
     iframe.title=youtubeLive.title||'Church live broadcast';iframe.dataset.liveId=youtubeLive.videoId;
     iframe.allow='autoplay; encrypted-media; picture-in-picture; fullscreen';
     iframe.allowFullscreen=true;iframe.referrerPolicy='strict-origin-when-cross-origin';
-    area.append(iframe);setStatus('Live now',true);
-    $('#player-notice').textContent='The church is live. Use the player controls to turn on sound.';
+    area.append(iframe);
   }
   function stopLiveMedia() { generation++;if(hls){hls.destroy();hls=null;}const video=area?.querySelector('video');if(video){video.pause();video.removeAttribute('src');video.load();}area?.querySelector('iframe')?.remove();const audio=$('#live-audio');if(audio){audio.pause();audio.removeAttribute('src');audio.load();audio.hidden=true;} }
   function setStatus(text,playing=false){if(!area)return;$('#broadcast-status').textContent=text;$('.status-dot').classList.toggle('available',playing);}
@@ -61,12 +63,15 @@
     const videoUrl=safeHttps(config.videoHlsUrl);const audioUrl=safeHttps(config.audioStreamUrl);
     $('#intro-play').addEventListener('click',playIntro);
     if(videoUrl)$('#watch-live').innerHTML='Watch broadcast <span>▷</span>';
-    $('#watch-live').addEventListener('click',()=>{autoLive=true;if(youtubeLive?.state==='live'){showYouTubeLive();return;}if(youtubeLive?.state==='external'){window.open('https://www.youtube.com/watch?v='+youtubeLive.videoId,'_blank','noopener,noreferrer');return;}if(!videoUrl){window.open(youtube+'/live','_blank','noopener,noreferrer');return;}stopLiveMedia();const current=generation;area.replaceChildren();const video=document.createElement('video');video.controls=true;video.playsInline=true;video.setAttribute('aria-label','Church video broadcast');area.append(video);$('#player-notice').textContent='Connecting to the broadcast…';video.addEventListener('playing',()=>{if(current!==generation)return;$('#player-notice').textContent='You are watching the church broadcast.';setStatus('Broadcast playing',true);});attachStream(video,videoUrl,current,()=>{$('#player-notice').textContent='The broadcast is unavailable right now. Please try again later or visit our YouTube channel.';setStatus('Broadcast unavailable');});});
+    $('#watch-live').addEventListener('click',()=>{autoLive=true;if(youtubeLive?.state==='live'){showYouTubeBroadcast();return;}if(youtubeLive?.state==='external'){window.open('https://www.youtube.com/watch?v='+youtubeLive.videoId,'_blank','noopener,noreferrer');return;}if(!videoUrl){window.open(broadcastId?'https://www.youtube.com/watch?v='+broadcastId:youtube+'/live','_blank','noopener,noreferrer');return;}stopLiveMedia();const current=generation;area.replaceChildren();const video=document.createElement('video');video.controls=true;video.playsInline=true;video.setAttribute('aria-label','Church video broadcast');area.append(video);$('#player-notice').textContent='Connecting to the broadcast…';video.addEventListener('playing',()=>{if(current!==generation)return;$('#player-notice').textContent='You are watching the church broadcast.';setStatus('Broadcast playing',true);});attachStream(video,videoUrl,current,()=>{$('#player-notice').textContent='The broadcast is unavailable right now. Please try again later or visit our YouTube channel.';setStatus('Broadcast unavailable');});});
     const tabs=[$('#watch-tab'),$('#listen-tab')];
-    function selectTab(index){stopLiveMedia();tabs.forEach((tab,i)=>{tab.setAttribute('aria-selected',String(i===index));tab.tabIndex=i===index?0:-1;});restorePoster();$('#watch-panel').hidden=index!==0;$('#listen-panel').hidden=index!==1;$('#player-notice').textContent=index===1?'Audio mode selected. Video playback has stopped.':'Explore our church introduction, or visit our YouTube channel for broadcasts.';if(index===1&&audioUrl)$('#audio-description').textContent='Listen to our audio broadcast without downloading video. Press play to begin.';autoLive=index===0;if(index===0&&youtubeLive?.state==='live')showYouTubeLive();}
+    function selectTab(index){stopLiveMedia();tabs.forEach((tab,i)=>{tab.setAttribute('aria-selected',String(i===index));tab.tabIndex=i===index?0:-1;});restorePoster();$('#watch-panel').hidden=index!==0;$('#listen-panel').hidden=index!==1;$('#player-notice').textContent=index===1?'Audio mode selected. Video playback has stopped.':'Explore our church introduction, or visit our YouTube channel for broadcasts.';if(index===1&&audioUrl)$('#audio-description').textContent='Listen to our audio broadcast without downloading video. Press play to begin.';autoLive=index===0;if(index===0&&['live','selected'].includes(youtubeLive?.state))showYouTubeBroadcast();}
     tabs.forEach((tab,i)=>{tab.addEventListener('click',()=>selectTab(i));tab.addEventListener('keydown',event=>{let next=null;if(['ArrowRight','ArrowLeft'].includes(event.key))next=1-i;if(event.key==='Home')next=0;if(event.key==='End')next=1;if(next!==null){event.preventDefault();selectTab(next);tabs[next].focus();}});});
     if(audioUrl){$('#audio-description').textContent='Listen to our audio broadcast without downloading video. Press play to begin.';$('#audio-start').hidden=false;}
     $('#audio-start').addEventListener('click',()=>{stopLiveMedia();restorePoster();const current=generation;const audio=$('#live-audio');audio.hidden=false;$('#audio-description').textContent='Connecting to the audio broadcast…';audio.addEventListener('playing',()=>{if(current!==generation)return;$('#audio-description').textContent='You are listening to the church audio broadcast.';setStatus('Audio playing',true);$('#player-notice').textContent='Audio only — no video is being downloaded.';},{once:true});attachStream(audio,audioUrl,current,()=>{$('#audio-description').textContent='The audio broadcast is unavailable right now. Please try again later.';$('#player-notice').textContent='Audio unavailable. Visit YouTube for other recordings.';setStatus('Audio unavailable');});});
+
+    // A selected broadcast is not evidence that the church is currently live.
+    if(broadcastId){youtubeLive={state:'selected',videoId:broadcastId,title:'Apostles Church of Christ Dubai — broadcast'};showYouTubeBroadcast();}
 
     // Status is read by a separate Worker; no credential is sent to visitors.
     const liveStatusUrl=safeHttps(config.liveStatusUrl);
@@ -76,7 +81,7 @@
         $('#watch-live').textContent=data.state==='live'?'Watch live':data.state==='external'?'Watch live on YouTube':'Watch on YouTube';
         if($('#watch-tab').getAttribute('aria-selected')!=='true'||!autoLive)return;
         if(data.state==='live'){
-          if(!$('#video-dialog')?.open)showYouTubeLive();
+          if(!$('#video-dialog')?.open)showYouTubeBroadcast();
         }else{
           if(area.querySelector('iframe[data-live-id]')){stopLiveMedia();restorePoster();}
           setStatus(data.state==='external'?'Live on YouTube':'No live broadcast right now',data.state==='external');
