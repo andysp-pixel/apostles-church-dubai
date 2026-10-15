@@ -1,45 +1,7 @@
 (() => {
   'use strict';
-
-  // Load the final cross-device corrections after the existing stylesheets.
-  if(!document.querySelector('link[data-site-fixes]')){
-    const fixes=document.createElement('link');
-    fixes.rel='stylesheet';
-    fixes.href='site-fixes.css?v=20261015-1';
-    fixes.dataset.siteFixes='true';
-    document.head.append(fixes);
-  }
-
   const mobile=window.matchMedia('(max-width: 767px)');
   const nav=document.getElementById('navigation'), toggle=document.querySelector('.menu-toggle');
-
-  // Keep the mobile menu identical to the real website navigation instead of
-  // maintaining a second, different list of pages.
-  function normalizeMobileNavigation(){
-    if(!nav)return;
-    const panel=nav.querySelector('.mobile-nav-panel');
-    const linksWrap=panel?.querySelector('.mobile-menu-links');
-    if(!panel||!linksWrap)return;
-    const primaryLinks=[...nav.children].filter(node=>node.tagName==='A'&&node.hasAttribute('href'));
-    if(!primaryLinks.length)return;
-    const clones=primaryLinks.map(link=>{
-      const clone=link.cloneNode(true);
-      clone.classList.add('mobile-menu-link');
-      if(clone.getAttribute('aria-current')==='page')clone.classList.add('is-current');
-      else clone.classList.remove('is-current');
-      return clone;
-    });
-    linksWrap.replaceChildren(...clones);
-    panel.querySelector('.mobile-menu-label')?.remove();
-    panel.querySelector('.mobile-menu-note')?.remove();
-    const visit=panel.querySelector('.mobile-nav-visit');
-    if(visit){
-      visit.textContent='Visit us';
-      visit.href='visit.html';
-    }
-  }
-  normalizeMobileNavigation();
-
   function syncMenu(focus=false){
     if(!nav||!toggle)return;
     const open=mobile.matches&&toggle.getAttribute('aria-expanded')==='true';
