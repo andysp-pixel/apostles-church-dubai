@@ -1,0 +1,186 @@
+/* Final layout corrections requested 2026-10-15.
+   Loaded after the existing styles so these rules only normalize the selected areas. */
+
+/* Keep the vision section focused on the Bible verse only, on every viewport. */
+.church-vision .vision-heading,
+.church-vision .vision-reference,
+.church-vision .vision-cross-references,
+.church-vision .vision-credit,
+.church-vision .vision-scripture > .text-link,
+.mobile-vision-details {
+  display: none !important;
+}
+.church-vision .vision-layout {
+  display: block !important;
+  grid-template-columns: minmax(0, 1fr) !important;
+}
+.church-vision .vision-scripture {
+  width: 100%;
+  max-width: 980px;
+  margin-inline: auto;
+  padding-inline: 0;
+}
+.church-vision .vision-scripture blockquote {
+  margin: 0;
+}
+
+/* Keep the section label, but remove the duplicated gallery title and Instagram CTA. */
+#church-gallery .section-heading h2,
+#church-gallery .section-heading > a {
+  display: none !important;
+}
+#church-gallery .section-heading {
+  gap: 0 !important;
+  margin-bottom: 18px !important;
+}
+#church-gallery .section-heading .eyebrow {
+  margin-bottom: 0 !important;
+}
+
+/* The secondary "Our vision" hero link is not required. */
+body[data-page="about"] .about-editorial-copy .actions .text-link[href="#our-vision"] {
+  display: none !important;
+}
+
+/* Facebook CTA should have the same visual weight as the YouTube CTA. */
+#watch-panel > .subtle-link[href*="facebook.com"] {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  min-height: 54px;
+  margin-top: 12px;
+  padding: 14px 18px;
+  border: 1px solid transparent;
+  border-radius: 14px;
+  background: var(--orange, #c84f12);
+  color: #fff !important;
+  font-size: 16px;
+  font-weight: 600;
+  line-height: 1.4;
+  text-align: center;
+  text-decoration: none;
+  box-shadow: none;
+}
+#watch-panel > .subtle-link[href*="facebook.com"]:hover,
+#watch-panel > .subtle-link[href*="facebook.com"]:focus-visible {
+  background: #933910;
+  color: #fff !important;
+}
+
+@media (max-width: 767px) {
+  /* One consistent left/right line for page copy, cards and shapes. */
+  :root { --mobile-gutter: 18px; }
+  .wrap {
+    margin-inline: var(--mobile-gutter) !important;
+    padding-inline: 0 !important;
+  }
+
+  /* Mobile navigation mirrors the real desktop navigation only. */
+  .mobile-menu-label,
+  .mobile-menu-note {
+    display: none !important;
+  }
+  .mobile-menu-links {
+    margin-top: 8px;
+  }
+  .header #navigation .mobile-menu-link {
+    min-height: 52px;
+    padding: 11px 0;
+  }
+  .header #navigation .mobile-nav-visit {
+    margin-top: 24px;
+  }
+
+  /* Keep service cards on three exact columns: icon | content | arrow. */
+  .service-grid {
+    gap: 14px;
+  }
+  .service-card {
+    grid-template-columns: 40px minmax(0, 1fr) 14px !important;
+    column-gap: 14px !important;
+    row-gap: 5px;
+    align-items: start;
+    width: 100%;
+    min-height: 146px;
+    padding: 18px !important;
+  }
+  .service-mobile-icon {
+    grid-column: 1 !important;
+    grid-row: 1 / 4 !important;
+    justify-self: start;
+    width: 40px !important;
+    height: 40px !important;
+    margin: 0;
+  }
+  .service-card h3,
+  .service-card .service-clock,
+  .service-card .calendar-link {
+    grid-column: 2 !important;
+    width: 100%;
+    margin-left: 0 !important;
+    margin-right: 0 !important;
+    text-align: left;
+  }
+  .service-card h3 { grid-row: 1 !important; }
+  .service-card .service-clock { grid-row: 2 !important; }
+  .service-card .calendar-link { grid-row: 3 !important; justify-self: start; }
+  .service-card::after {
+    grid-column: 3 !important;
+    grid-row: 1 / 4 !important;
+    align-self: center !important;
+    justify-self: end !important;
+    margin: 0 !important;
+  }
+
+  /* Gallery: no duplicate heading/link and no oversized blank lead-in. */
+  #church-gallery {
+    padding-top: 24px !important;
+  }
+  #church-gallery .gallery-shell {
+    margin-top: 0 !important;
+  }
+
+  /* About page: keep the primary CTA aligned after removing the extra link. */
+  body[data-page="about"] .about-editorial-copy .actions {
+    align-items: stretch;
+  }
+  body[data-page="about"] .about-editorial-copy .actions .button {
+    width: 100%;
+  }
+
+  /* Verse-only presentation with the same page gutter as nearby sections. */
+  body[data-page="our-church"] .church-vision > .vision-layout,
+  body[data-page="about"] .church-vision > .vision-layout {
+    display: block !important;
+  }
+  .church-vision .vision-scripture {
+    max-width: none;
+    margin: 0;
+  }
+  .church-vision .vision-scripture blockquote {
+    margin: 0 !important;
+  }
+
+  /* Match both Live CTAs exactly on phones. */
+  #watch-panel > .button,
+  #watch-panel > .subtle-link[href*="facebook.com"] {
+    width: 100% !important;
+    min-height: 54px !important;
+    border-radius: 14px !important;
+    font-size: 16px !important;
+    font-weight: 600 !important;
+  }
+}
+
+@media (max-width: 359px) {
+  .service-card {
+    grid-template-columns: 36px minmax(0, 1fr) 12px !important;
+    column-gap: 12px !important;
+    padding-inline: 14px !important;
+  }
+  .service-mobile-icon {
+    width: 36px !important;
+    height: 38px !important;
+  }
+}
