@@ -37,8 +37,15 @@ try{
       await page.goto(origin+'/'+file,{waitUntil:'load'});await page.evaluate(()=>document.fonts.ready);await noOverflow(page,engine+' '+width+' '+file);
       const header=await page.locator('.header').boundingBox();assert.ok(header.height>=65&&header.height<=80);
       await page.locator('.menu-toggle').tap();assert.equal(await page.locator('.menu-toggle').getAttribute('aria-expanded'),'true');await noOverflow(page,'open menu');
+      const menuBox=await page.locator('#navigation').boundingBox();assert.ok(menuBox.height>=page.viewportSize().height-header.height-2,'Menu must extend below the header to the bottom of the viewport');
+      assert.equal(await page.locator('.header').evaluate(el=>getComputedStyle(el).backdropFilter),'none','Header blur must not trap the fixed menu');
+      assert.equal(await page.locator('.mobile-menu-link').count(),10);
+      await page.locator('.mobile-menu-link').first().scrollIntoViewIfNeeded();const firstMenuItem=await page.locator('.mobile-menu-link').first().boundingBox();assert.ok(firstMenuItem.y>=menuBox.y&&firstMenuItem.y+firstMenuItem.height<=menuBox.y+menuBox.height+1,'First menu link is visible');
+      await page.locator('.mobile-menu-link').last().scrollIntoViewIfNeeded();const lastMenuItem=await page.locator('.mobile-menu-link').last().boundingBox();assert.ok(lastMenuItem.y>=menuBox.y&&lastMenuItem.y+lastMenuItem.height<=menuBox.y+menuBox.height+1,'Last menu link is reachable');
       await page.keyboard.press('Escape');assert.equal(await page.locator('.menu-toggle').getAttribute('aria-expanded'),'false');
       if(file==='index.html'){
+       const footer=page.locator('.footer-new');await footer.scrollIntoViewIfNeeded();assert.ok((await footer.boundingBox()).height<560,'Default phone footer should stay compact');assert.equal(await page.locator('.mobile-footer-more').getAttribute('open'),null);await page.locator('.mobile-footer-more summary').tap();assert.ok(await page.locator('.mobile-footer-more a[href="donate.html"]').isVisible());await noOverflow(page,'expanded compact footer');await page.locator('.mobile-footer-more summary').tap();
+       await page.evaluate(()=>window.scrollTo(0,0));
        const heroButtons=page.locator('.photo-hero .actions a');for(const link of await heroButtons.all()){const b=await link.boundingBox();assert.ok(b.height>=50&&b.x>=0&&b.x+b.width<=width+1);}
        const cta=await heroButtons.last().boundingBox();assert.ok(cta.y+cta.height<=(width===320?568:844)+1,'Hero actions should fit the first screen');
        await page.locator('.gallery-viewport').first().evaluate(el=>el.scrollBy({left:240,behavior:'instant'}));await noOverflow(page,'swiped gallery');

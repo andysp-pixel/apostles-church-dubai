@@ -12,13 +12,23 @@ const css=read('mobile.css');
 assert.equal((css.match(/{/g)||[]).length,(css.match(/}/g)||[]).length);
 assert.equal(css.slice(0,css.indexOf('@media')).replace(/\/\*[\s\S]*?\*\//g,'').replace(/\s/g,''),'.mobile-only,.mobile-copy,.mobile-nav-panel{display:none}.responsive-photo{display:contents}','Unexpected global layout change');
 for(const token of ['safe-area-inset-top','safe-area-inset-bottom','minmax(0,1fr)','aspect-ratio:16/9','scroll-snap-type:x mandatory','font-size:16px','prefers-reduced-motion'])assert.ok(css.includes(token),token);
+assert.ok(css.includes('backdrop-filter:none;-webkit-backdrop-filter:none'),'Fixed mobile navigation must escape the desktop blur containing block');
+assert.ok(css.includes('100dvh - var(--mobile-header)'),'Navigation height must be based on the viewport');
+for(const file of ['index.html','prayer.html']){
+ const html=read(file),section=html.match(/<section class="daily-verse-section[\s\S]*?<\/section>/)[0];
+ assert.ok(section.includes('id="daily-verse-text"')&&section.includes('id="daily-verse-reference"'));
+ assert.ok(!/BibleGateway|Bible Gateway|Biblica|daily-verse-date|daily-verse-link|verse-attribution/.test(section),'Verse card should contain only scripture and reference');
+ const privacy=html.match(/<dialog id="privacy-dialog"[\s\S]*?<\/dialog>/)[0];assert.ok(privacy.includes('Powered by BibleGateway.com')&&privacy.includes('Biblica'),'Credits remain accessible in Privacy');
+ assert.ok(!/\d+ photographs/.test(html),'Gallery count should not be rendered');
+ assert.ok(html.includes('class="mobile-only mobile-footer"')&&html.includes('<details class="mobile-footer-more">'));
+}
 const manifest=JSON.parse(fs.readFileSync(path.join(root,'scripts/mobile_images.json'),'utf8'));
 for(const [source,photo] of Object.entries(manifest.images)){
  assert.equal(createHash('sha256').update(fs.readFileSync(path.join(dist,source))).digest('hex'),photo.sha256,'Source photo changed');
  for(const item of photo.variants){assert.ok(item.width<=photo.width);assert.equal(fs.statSync(path.join(dist,item.src)).size,item.bytes);assert.ok(Math.abs(item.height/item.width-photo.height/photo.width)<0.004,'Image proportions changed');}
 }
 for(const file of fs.readdirSync(dist).filter(n=>n.endsWith('.html'))){
- const html=read(file);assert.ok(html.includes('viewport-fit=cover'));assert.ok(html.includes('src="mobile.js"'));assert.ok(html.includes('href="mobile.css"'));
+ const html=read(file);assert.ok(html.includes('viewport-fit=cover'));assert.ok(html.includes('src="mobile.js?v=20261015-2"'));assert.ok(html.includes('href="mobile.css?v=20261015-2"'));
  for(const set of html.matchAll(/srcset="([^"]+)"/g))for(const item of set[1].split(','))assert.ok(fs.existsSync(path.join(dist,item.trim().split(' ')[0])),'Missing responsive photo');
 }
 class El{
@@ -51,3 +61,13 @@ for(const width of widths){
  console.log('PASS: '+width+'px configuration — navigation, focus/Escape, anchor closing, breakpoint reset, event cards, map consent and contact configuration (DOM simulation).');
 }
 console.log('PASS: desktop CSS unchanged; mobile-only scope, safe areas, responsive image files/proportions and original photo hashes. Browser geometry is not verified by this script.');
+// The simplified verse card deliberately has no date/link/provider nodes.
+const verseEls=Object.fromEntries(['daily-verse','daily-verse-text','daily-verse-reference'].map(id=>['#'+id,new El()]));
+const bibleWindow={matchMedia:()=>({matches:true})};
+const bibleDocument={querySelector:s=>verseEls[s]||null,querySelectorAll:()=>[],createElement:tag=>Object.assign(new El(tag),{remove(){}}),head:new El(),addEventListener(){},hidden:false};
+class PlainParser{parseFromString(text){return{body:{textContent:String(text).replace(/<[^>]*>/g,'')}};}}
+vm.runInNewContext(read('church.js'),{window:bibleWindow,document:bibleDocument,DOMParser:PlainParser,URL,Date,Intl,setTimeout:()=>1,clearTimeout(){},setInterval(){}});
+bibleWindow.apostlesDailyVerse({votd:{version_id:'NIV',text:'God is our refuge.',reference:'Psalm 46:1',year:'2026',month:'10',day:'15',permalink:'https://www.biblegateway.com/'}});
+assert.equal(verseEls['#daily-verse-text'].textContent,'God is our refuge.');assert.equal(verseEls['#daily-verse-reference'].textContent,'Psalm 46:1 · NIV');
+assert.equal(verseEls['#daily-verse-text'].dataset.loaded,'true');
+console.log('PASS: daily NIV callback updates the simplified verse card without requiring removed provider/date/link elements.');

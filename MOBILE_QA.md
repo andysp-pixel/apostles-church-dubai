@@ -5,7 +5,7 @@ The mobile presentation lives in `mobile.css` and applies up to 767px. The origi
 ## Delivered
 
 - Sticky 72px header with safe-area padding, full-screen navigation, animated reveal, focus handling, Escape and scroll locking.
-- Navy, white and gold mobile hero with real church photography and touch-sized visit/live actions.
+- Warm white, orange and charcoal mobile presentation, matching the original site, with real church photography and touch-sized visit/live actions.
 - Word / Community / Service shortcuts, single-column gatherings, four community values and upcoming weekly gatherings calculated in Dubai time.
 - Responsive 16:9 Live player and YouTube / Facebook / Restream links. LIVE NOW is driven by confirmed live status, never by the weekly schedule. The optional live API still requires owner activation as described in `cloudflare-live-api/ACTIVATE.md`.
 - Native swipe gallery with uniform 4:3 photographs and no mobile autoplay. Original photos remain unchanged; responsive WebP variants are used only on phones.
@@ -41,3 +41,7 @@ node scripts/check-mobile-browser.mjs
 ```
 
 These dependencies are test-only; the deployed website is still buildless HTML5/CSS/JavaScript. Inspect `test-results/mobile/report.json` and the screenshots, and check a physical iPhone and Android phone before treating device compatibility as verified. An exact Google Maps pin, a public Restream viewer URL, email and additional sermon metadata can be supplied later without redesigning the mobile layout.
+
+## Corrections following the Android screenshots
+
+The screenshots showed that only the menu label appeared below the header. The desktop header’s `backdrop-filter` created a containing block for the fixed navigation; mobile disables that filter and explicitly sizes the menu from the viewport. The browser regression harness now checks menu height, the first/last links, and the collapsed footer height. These browser assertions are prepared, not executed here. Static/DOM regression checks also cover the simplified verse card, credits moved to Privacy, removal of the photograph count, the collapsible compact footer, and the mobile header containment rules. Desktop `styles.css` remains unchanged.

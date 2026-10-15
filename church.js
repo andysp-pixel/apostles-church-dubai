@@ -14,12 +14,10 @@
   if($('#daily-verse')){
     let request=null,lastLoad=0,timeout;
     const plain=value=>{const parser=new DOMParser();return parser.parseFromString(String(value||''),'text/html').body.textContent.trim();};
-    const unavailable=()=>{if(!$('#daily-verse-text').dataset.loaded){$('#daily-verse-text').textContent='Today’s NIV verse is available on Bible Gateway.';$('#daily-verse-reference').textContent='Open the reading below.';}};
+    const unavailable=()=>{if(!$('#daily-verse-text').dataset.loaded){$('#daily-verse-text').textContent='Today’s verse is temporarily unavailable. Please check back shortly.';$('#daily-verse-reference').textContent='';}};
     window.apostlesDailyVerse=payload=>{
       clearTimeout(timeout);const v=payload?.votd;if(!v||v.version_id!=='NIV'||!v.text||!v.reference){unavailable();return;}
       $('#daily-verse-text').textContent=plain(v.text);$('#daily-verse-text').dataset.loaded='true';$('#daily-verse-reference').textContent=plain(v.reference)+' · NIV';
-      if(v.year&&v.month&&v.day){const date=new Date(Date.UTC(Number(v.year),Number(v.month)-1,Number(v.day)));if(!Number.isNaN(date.getTime()))$('#daily-verse-date').textContent='Bible Gateway daily reading · '+new Intl.DateTimeFormat('en-GB',{day:'numeric',month:'long',year:'numeric',timeZone:'UTC'}).format(date);}
-      try{const link=new URL(plain(v.permalink));if(link.protocol==='https:'&&link.hostname==='www.biblegateway.com')$('#daily-verse-link').href=link.href;}catch{}
       request?.remove();request=null;
     };
     const load=()=>{lastLoad=Date.now();request?.remove();request=document.createElement('script');request.src='https://www.biblegateway.com/votd/get/?format=json&version=NIV&callback=apostlesDailyVerse&_='+Math.floor(Date.now()/3600000);request.async=true;request.onerror=()=>{clearTimeout(timeout);unavailable();request?.remove();};document.head.append(request);timeout=setTimeout(unavailable,10000);};

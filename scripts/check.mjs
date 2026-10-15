@@ -16,7 +16,7 @@ for(const [file,html] of contents){
  assert(ids.length===new Set(ids).size,'Duplicate ids in '+file);
  for(const m of html.matchAll(/(?:src|href|data-src|poster)="([^"]+)"/g)){
   const ref=m[1];if(ref.startsWith('tel:')){assert(/^tel:\+?[0-9]+$/.test(ref),'Invalid call link');continue;}if(ref.startsWith('mailto:'))continue;if(/^(https?:|data:)/.test(ref)){if(ref.startsWith('http'))assert(new URL(ref).protocol==='https:','Insecure link');continue;}
-  const [target,anchor]=ref.split('#');const asset=target||file;
+  const [queryTarget,anchor]=ref.split('#');const target=queryTarget.split('?')[0];const asset=target||file;
   assert(fs.existsSync(path.join(dist,asset)),'Missing local target '+ref+' in '+file);
   if(anchor){const targetHtml=contents.get(asset)||fs.readFileSync(path.join(dist,asset),'utf8');assert(targetHtml.includes('id="'+anchor+'"'),'Missing anchor '+ref+' in '+file);}
  }

@@ -1,6 +1,6 @@
 # Apostles Church of Christ Dubai
 
-Mobile-first presentation for phones up to 767px, with navy, white and gold styling, a sticky menu, touch-sized actions, native swipe gallery and responsive WebP images. The existing desktop stylesheet and layout are preserved. See `MOBILE_QA.md` for completed checks and the browser/device checks still pending.
+Mobile-first presentation for phones up to 767px, with the existing warm white, orange and charcoal church colours, a sticky menu, touch-sized actions, native swipe gallery and responsive WebP images. The existing desktop stylesheet and layout are preserved. See `MOBILE_QA.md` for completed checks and the browser/device checks still pending.
 
 Seven responsive HTML5 pages: **Our Church, Live, Sermons, Prayer, Donate, About and Visit Us**. Photography-led layout, orange/red church branding, self-hosted Inter and Manrope typography, Cormorant Garamond scripture, smooth slide reveals, a skippable welcome animation and reduced-motion support. No npm install, API key, database or build step is needed to serve the website. Browser-test dependencies are optional and used only for QA.
 
@@ -36,7 +36,7 @@ All times are **Asia/Dubai (GST, UTC+4)**.
 
 ## Automatic NIV Verse of the Day
 
-`church.js` loads the official Bible Gateway NIV Verse of the Day JSONP feed on Our Church and Prayer. It refreshes hourly and after returning to an old tab. The provider’s reading date is displayed; its day boundary can differ from Dubai’s. No NIV database or API key is bundled. Required **Powered by BibleGateway.com** and NIV/Biblica attribution are included. The feed is permitted by the Cloudflare `_headers` policy.
+`church.js` loads the official Bible Gateway NIV Verse of the Day JSONP feed on Our Church and Prayer. It refreshes hourly and after returning to an old tab. The provider’s reading date is displayed; its day boundary can differ from Dubai’s. No NIV database or API key is bundled. The verse card contains only its title, Scripture text and reference. **Powered by BibleGateway.com** and the NIV/Biblica acknowledgments remain available in Privacy rather than filling the verse card. The feed is permitted by the Cloudflare `_headers` policy.
 
 If the provider or visitor connection is unavailable, the widget shows a reading link. Scripture is rendered as plain text. Bible Gateway receives a request when the widget loads. Documentation: https://www.biblegateway.com/usage/votd/docs/
 
@@ -118,3 +118,7 @@ Keep `mobile.css`, `mobile.js`, `assets/mobile/`, and all regenerated HTML pages
 Mobile map loading uses the supplied address wording rather than an unverified precise pin. `restreamWatchUrl` can hold a confirmed public viewer URL; until supplied, the Restream button links to the platform and is not a direct church broadcast. The Email Us card asks visitors to request the email on Facebook until `contactEmail` is configured. Future `upcomingEvents` are combined with the next real weekly gatherings, all displayed in Dubai time.
 
 The prepared GitHub Actions workflow includes rendered Chromium/WebKit checks at 320, 360, 375, 390, 412 and 430px. Those rendered checks have not been run in this editing environment; consult `MOBILE_QA.md`. This export does not update the existing public Cloudflare site until its contents are uploaded to the connected repository and a deployment succeeds.
+
+## 15 October mobile corrections
+
+The inherited desktop backdrop blur is disabled on the mobile header because it trapped the fixed navigation inside the header. The mobile menu now has an explicit viewport height with `vh` / `dvh` fallback, scrolls independently, and uses the existing warm white/orange palette. Its current-link decoration is scoped to prevent stray underlines. The phone footer is replaced by compact church/contact/social details and a collapsed Church links disclosure; the full desktop footer is preserved. The gallery photo count is removed everywhere. Versioned mobile styles/scripts ensure returning visitors fetch the menu fix.
