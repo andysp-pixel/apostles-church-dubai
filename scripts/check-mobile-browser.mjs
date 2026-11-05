@@ -29,7 +29,7 @@ try{
   try{
    for(const width of widths){
     const context=await browser.newContext({viewport:{width,height:width===320?568:844},isMobile:true,hasTouch:true,deviceScaleFactor:2,reducedMotion:'reduce'});
-    await context.addInitScript(()=>sessionStorage.setItem('apostles-welcome-seen','1'));
+    
     await context.route('**/*',route=>new URL(route.request().url()).origin===origin?route.continue():route.abort());
     const page=await context.newPage(),errors=[];page.on('pageerror',e=>errors.push(e.message));
     try{
@@ -68,7 +68,7 @@ try{
    }
    // Check the transitions into the tablet/desktop presentation as well.
    for(const width of [768,1023,1024,1440]){
-    const context=await browser.newContext({viewport:{width,height:900},reducedMotion:'reduce'});await context.addInitScript(()=>sessionStorage.setItem('apostles-welcome-seen','1'));
+    const context=await browser.newContext({viewport:{width,height:900},reducedMotion:'reduce'});
     await context.route('**/*',route=>new URL(route.request().url()).origin===origin?route.continue():route.abort());const page=await context.newPage();
     try{for(const file of pages){await page.goto(origin+'/'+file);await page.evaluate(()=>document.fonts.ready);await noOverflow(page,engine+' '+width+' '+file);report.push({engine,width,page:file,result:'passed'});}}finally{await context.close();}
    }
