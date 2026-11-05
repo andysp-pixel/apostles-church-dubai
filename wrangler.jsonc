@@ -1,0 +1,10 @@
+{
+  "name": "apostles-church-dubai-web",
+  "compatibility_date": "2026-10-12",
+  "assets": {
+    "directory": "."
+  },
+  "observability": {
+    "enabled": true
+  }
+}

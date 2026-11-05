@@ -1,0 +1,12 @@
+.git/
+.github/
+.openai/
+.wrangler/
+node_modules/
+scripts/
+cloudflare-live-api/
+README.md
+MOBILE_QA.md
+wrangler.jsonc
+package*.json
+test-results/

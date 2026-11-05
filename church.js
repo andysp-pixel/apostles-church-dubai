@@ -14,7 +14,7 @@
   if($('#daily-verse')){
     let request=null,lastLoad=0,timeout;
     const plain=value=>{const parser=new DOMParser();return parser.parseFromString(String(value||''),'text/html').body.textContent.trim();};
-    const unavailable=()=>{if(!$('#daily-verse-text').dataset.loaded){$('#daily-verse-text').textContent='Today’s verse is temporarily unavailable. Please check back shortly.';$('#daily-verse-reference').textContent='';}};
+    const unavailable=()=>{if(!$('#daily-verse-text').dataset.loaded){/* Keep the readable Scripture fallback if the daily verse service is unavailable. */}};
     window.apostlesDailyVerse=payload=>{
       clearTimeout(timeout);const v=payload?.votd;if(!v||v.version_id!=='NIV'||!v.text||!v.reference){unavailable();return;}
       $('#daily-verse-text').textContent=plain(v.text);$('#daily-verse-text').dataset.loaded='true';$('#daily-verse-reference').textContent=plain(v.reference)+' · NIV';

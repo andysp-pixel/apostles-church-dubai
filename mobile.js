@@ -1,20 +1,20 @@
 (() => {
   'use strict';
-  const mobile=window.matchMedia('(max-width: 767px)');
+  const mobile=window.matchMedia('(max-width: 1023px)');
   const nav=document.getElementById('navigation'), toggle=document.querySelector('.menu-toggle');
   function syncMenu(focus=false){
     if(!nav||!toggle)return;
     const open=mobile.matches&&toggle.getAttribute('aria-expanded')==='true';
     document.body.classList.toggle('mobile-menu-open',open);
     nav.inert=mobile.matches&&!open;
-    if(open&&focus)nav.querySelector('.mobile-menu-link')?.focus({preventScroll:true});
+    if(open&&focus)nav.querySelector('a')?.focus({preventScroll:true});
   }
   toggle?.addEventListener('click',()=>syncMenu(true));
   nav?.addEventListener('click',event=>{if(event.target.closest('a'))syncMenu();});
   document.addEventListener('keydown',event=>{
     if(event.key==='Escape'){syncMenu();return;}
     if(event.key!=='Tab'||!mobile.matches||toggle?.getAttribute('aria-expanded')!=='true')return;
-    const links=[toggle,...nav.querySelectorAll('.mobile-nav-panel a[href]')].filter(Boolean);
+    const links=[toggle,...nav.querySelectorAll('a[href]')].filter(Boolean);
     if(!links.length)return;
     if(event.shiftKey&&document.activeElement===links[0]){event.preventDefault();links.at(-1).focus();}
     else if(!event.shiftKey&&document.activeElement===links.at(-1)){event.preventDefault();links[0].focus();}
